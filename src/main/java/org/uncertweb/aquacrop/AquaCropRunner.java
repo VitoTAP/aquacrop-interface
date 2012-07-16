@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
 
 import org.uncertweb.aquacrop.data.Output;
@@ -68,36 +67,49 @@ public class AquaCropRunner {
 
 			// get runtime
 			Runtime runtime = Runtime.getRuntime();
+			
+			// for monitoring and reading
+			File outputFile = new File(basePath, "ACsaV31plus/OUTP/" + runId + "PRO.OUT");
 
 			// run program
-			try {
+			try {			
+				// start aquacrop process
 				Process process = runtime.exec((prefixCommand != null ? prefixCommand + " " : "") + basePath + "/ACsaV31plus/ACsaV31plus.exe");
-				BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-				while (inputReader.readLine() != null) {
-					// ignore, required to run though
+				
+				// only done when output file exists
+				boolean done = false;
+				while (!done) {
+					if (outputFile.exists()) {
+						done = true;
+						process.destroy(); // force required if error
+					}
+					else {
+						Thread.sleep(1000); // quick rest
+					}
 				}
 			}
 			catch (IOException e) {
 				throw new AquaCropException("Couldn't run AquaCrop: " + e.getMessage());
 			}
+			catch (InterruptedException e) {
+				throw new AquaCropException("Couldn't run AquaCrop: " + e.getMessage());
+			}
 
 			// parse output
-			File outputFile = new File(basePath, "ACsaV31plus/OUTP/" + runId + "PRO.OUT");
-			if (outputFile.exists()) {
-				FileReader reader = new FileReader(outputFile);
-				Output output = AquaCropRunner.deserializeOutput(reader);
-				reader.close();
+			FileReader reader = new FileReader(outputFile);
+			Output output = AquaCropRunner.deserializeOutput(reader);
+			reader.close();
 
-				// remove output file
-				outputFile.delete();
-				
-				// FIXME: could be null
-				return output;
+			// remove output file
+			outputFile.delete();
+			
+			if (output == null) {
+				// must be a problem running AquaCrop, but unfortunately it only gives error messages in dialogs!
+				throw new AquaCropException("Couldn't parse AquaCrop empty output, parameters may be invalid.");
 			}
 			else {
-				// must be a problem running AquaCrop, but unfortunately it doesn't give any error messages!
-				throw new AquaCropException("Couldn't parse AquaCrop output: files not generated.");
-			}
+				return output;
+			}				
 		}
 		catch (IOException e) {
 			// will be from creating the project file, or reading the output file
