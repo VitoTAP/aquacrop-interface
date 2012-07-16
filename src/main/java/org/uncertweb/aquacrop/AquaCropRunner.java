@@ -8,6 +8,8 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.Reader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.uncertweb.aquacrop.data.Output;
 import org.uncertweb.aquacrop.data.Project;
 
@@ -34,6 +36,8 @@ import org.uncertweb.aquacrop.data.Project;
  *
  */
 public class AquaCropRunner {
+	
+	private final Logger logger = LoggerFactory.getLogger(AquaCropRunner.class);
 
 	private String basePath;
 	private String prefixCommand;
@@ -79,21 +83,22 @@ public class AquaCropRunner {
 				// only done when output file exists
 				boolean done = false;
 				while (!done) {
+					
 					if (outputFile.exists()) {
 						done = true;
 						process.destroy(); // force required if error
 					}
 					else {
-						Thread.sleep(1000); // quick rest
+//						Thread.sleep(1000); // quick rest
 					}
 				}
 			}
 			catch (IOException e) {
 				throw new AquaCropException("Couldn't run AquaCrop: " + e.getMessage());
 			}
-			catch (InterruptedException e) {
-				throw new AquaCropException("Couldn't run AquaCrop: " + e.getMessage());
-			}
+//			catch (InterruptedException e) {
+//				throw new AquaCropException("Couldn't run AquaCrop: " + e.getMessage());
+//			}
 
 			// parse output
 			FileReader reader = new FileReader(outputFile);
@@ -104,10 +109,12 @@ public class AquaCropRunner {
 			outputFile.delete();
 			
 			if (output == null) {
+				logger.debug("Output was null, throwing exception...");
 				// must be a problem running AquaCrop, but unfortunately it only gives error messages in dialogs!
 				throw new AquaCropException("Couldn't parse AquaCrop empty output, parameters may be invalid.");
 			}
 			else {
+				logger.debug("Parsed output successfully.");
 				return output;
 			}				
 		}
