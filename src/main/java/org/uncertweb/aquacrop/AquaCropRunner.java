@@ -6,13 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.uncertweb.aquacrop.data.Output;
 import org.uncertweb.aquacrop.data.Project;
+import org.uncertweb.io.StreamGobbler;
 
 /**
  * Okay...
@@ -68,9 +68,11 @@ public class AquaCropRunner {
 		// serialize project and run
 		try {
 			// this will create all data files
+			logger.debug("Serializing project.");
 			AquaCropSerializer.serializeProject(project, basePath, basePathOverride, runId);
 
 			// get runtime
+			logger.debug("Getting runtime");
 			Runtime runtime = Runtime.getRuntime();
 			
 			// for monitoring and reading
@@ -79,30 +81,42 @@ public class AquaCropRunner {
 			// run program
 			try {			
 				// start aquacrop process
+				logger.debug("Starting process.");
 				Process process = runtime.exec((prefixCommand != null ? prefixCommand + " " : "") + basePath + "/ACsaV31plus/ACsaV31plus.exe");
 				
-				BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));	  	
-				while (inputReader.readLine() != null) {
-					// ignore, required to run though
-					// causes hangs on error
-				}
+				// consume streams
+				StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream());            
+				StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream());
+	            errorGobbler.start();
+	            outputGobbler.start();
+	            
+	            // wait for process
+	            // we could be waiting forever if there's been an error...
+	            logger.debug("Waiting for process to end...");
+	            process.waitFor();
 			}
 			catch (IOException e) {
 				throw new AquaCropException("Couldn't run AquaCrop: " + e.getMessage());
 			}
+			catch (InterruptedException e) {
+				throw new AquaCropException("Couldn't run AquaCrop: " + e.getMessage());
+			}
 
 			// parse output
+			logger.debug("Process finished, parsing output.");
 			FileReader reader = new FileReader(outputFile);
 			Output output = AquaCropRunner.deserializeOutput(reader);
 			reader.close();
 
 			// remove output file
+			logger.debug("Removing output file.");
 			outputFile.delete();
 			
 			if (output == null) {
-				logger.debug("Output was null, throwing exception...");
 				// must be a problem running AquaCrop, but unfortunately it only gives error messages in dialogs!
-				throw new AquaCropException("Couldn't parse AquaCrop empty output, parameters may be invalid.");
+				String message = "Couldn't parse AquaCrop empty output, parameters may be invalid.";
+				logger.error(message);
+				throw new AquaCropException(message);
 			}
 			else {
 				logger.debug("Parsed output successfully.");
@@ -111,7 +125,9 @@ public class AquaCropRunner {
 		}
 		catch (IOException e) {
 			// will be from creating the project file, or reading the output file
-			throw new AquaCropException("Error reading input/output files: " + e.getMessage());
+			String message = "Error reading input/output files: " + e.getMessage();
+			logger.error(message);
+			throw new AquaCropException(message);
 		}
 		finally {
 			// clean up input files			
