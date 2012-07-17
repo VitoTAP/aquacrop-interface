@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 
 import org.slf4j.Logger;
@@ -80,25 +81,15 @@ public class AquaCropRunner {
 				// start aquacrop process
 				Process process = runtime.exec((prefixCommand != null ? prefixCommand + " " : "") + basePath + "/ACsaV31plus/ACsaV31plus.exe");
 				
-				// only done when output file exists
-				boolean done = false;
-				while (!done) {
-					
-					if (outputFile.exists()) {
-						done = true;
-						process.destroy(); // force required if error
-					}
-					else {
-//						Thread.sleep(1000); // quick rest
-					}
+				BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));	  	
+				while (inputReader.readLine() != null) {
+					// ignore, required to run though
+					// causes hangs on error
 				}
 			}
 			catch (IOException e) {
 				throw new AquaCropException("Couldn't run AquaCrop: " + e.getMessage());
 			}
-//			catch (InterruptedException e) {
-//				throw new AquaCropException("Couldn't run AquaCrop: " + e.getMessage());
-//			}
 
 			// parse output
 			FileReader reader = new FileReader(outputFile);
