@@ -1,6 +1,8 @@
 package org.uncertweb.aquacrop.data;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 public class Output implements Serializable {
 
@@ -98,7 +100,7 @@ public class Output implements Serializable {
 		return bioMass;
 	}
 	
-	public double  getBrW() {
+	public double getBrW() {
 		return brW;
 	}
 	
@@ -120,6 +122,24 @@ public class Output implements Serializable {
 	
 	public double getwPetY() {
 		return wPetY;
+	}
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (Field field : this.getClass().getDeclaredFields()) {
+			int modifiers = field.getModifiers();
+			if (Modifier.isPrivate(modifiers) && !Modifier.isStatic(modifiers)) {
+				String value;
+				try {
+					value = String.valueOf(field.getDouble(this));
+				}
+				catch (IllegalAccessException e) {
+					value = "?";
+				}
+				sb.append(field.getName() + "=" + value + ", ");
+			}
+		}
+		return sb.delete(sb.length() - 2, sb.length()).toString();
 	}
 	
 }
