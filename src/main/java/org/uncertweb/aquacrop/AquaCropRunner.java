@@ -72,7 +72,7 @@ public class AquaCropRunner {
 			AquaCropSerializer.serializeProject(project, basePath, basePathOverride, runId);
 
 			// get runtime
-			logger.debug("Getting runtime");
+			logger.debug("Getting runtime.");
 			Runtime runtime = Runtime.getRuntime();
 			
 			// for monitoring and reading
@@ -92,8 +92,15 @@ public class AquaCropRunner {
 	            
 	            // wait for process
 	            // we could be waiting forever if there's been an error...
-	            logger.debug("Waiting for process to end...");
-	            process.waitFor();
+//				boolean done = false;
+//				while (!done) {
+//					if (outputFile.exists() && outputFile.length() >= 512) {
+//						done = true;
+//						process.destroy(); // force required if error
+//					}
+//				}
+				logger.debug("Waiting for process to end."); 
+				process.waitFor();
 			}
 			catch (IOException e) {
 				throw new AquaCropException("Couldn't run AquaCrop: " + e.getMessage());
@@ -103,7 +110,7 @@ public class AquaCropRunner {
 			}
 
 			// parse output
-			logger.debug("Process finished, parsing output.");
+			logger.debug("Process finished, parsing output...");
 			FileReader reader = new FileReader(outputFile);
 			Output output = AquaCropRunner.deserializeOutput(reader);
 			reader.close();
