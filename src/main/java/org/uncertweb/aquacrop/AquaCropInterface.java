@@ -36,15 +36,15 @@ import org.uncertweb.io.StreamGobbler;
  * @author Richard Jones
  *
  */
-public class AquaCropRunner {
+public class AquaCropInterface {
 	
-	private final Logger logger = LoggerFactory.getLogger(AquaCropRunner.class);
+	private final Logger logger = LoggerFactory.getLogger(AquaCropInterface.class);
 
 	private String basePath;
 	private String prefixCommand;
 	private String basePathOverride;
 
-	public AquaCropRunner(String basePath) {
+	public AquaCropInterface(String basePath) {
 		this.basePath = basePath;
 	}
 
@@ -55,7 +55,7 @@ public class AquaCropRunner {
 	 * @param basePath
 	 * @param prefixCommand
 	 */
-	public AquaCropRunner(String basePath, String prefixCommand, String basePathOverride) {
+	public AquaCropInterface(String basePath, String prefixCommand, String basePathOverride) {
 		this(basePath);
 		this.prefixCommand = prefixCommand;
 		this.basePathOverride = basePathOverride;
@@ -92,15 +92,20 @@ public class AquaCropRunner {
 	            
 	            // wait for process
 	            // we could be waiting forever if there's been an error...
-//				boolean done = false;
-//				while (!done) {
-//					if (outputFile.exists() && outputFile.length() >= 512) {
-//						done = true;
-//						process.destroy(); // force required if error
-//					}
-//				}
-				logger.debug("Waiting for process to end."); 
-				process.waitFor();
+	            logger.debug("Waiting for process to end."); 
+				boolean done = false;
+				while (!done) {
+					if (outputFile.exists()) {
+						done = true;
+	            		Thread.sleep(1000); // wait for write
+						process.destroy(); // force required if error
+					}
+					else {
+	            		Thread.sleep(500);
+					}
+				}
+//				logger.debug("Waiting for process to end."); 
+//				process.waitFor();
 			}
 			catch (IOException e) {
 				throw new AquaCropException("Couldn't run AquaCrop: " + e.getMessage());
@@ -112,7 +117,7 @@ public class AquaCropRunner {
 			// parse output
 			logger.debug("Process finished, parsing output...");
 			FileReader reader = new FileReader(outputFile);
-			Output output = AquaCropRunner.deserializeOutput(reader);
+			Output output = AquaCropInterface.deserializeOutput(reader);
 			reader.close();
 
 			// remove output file

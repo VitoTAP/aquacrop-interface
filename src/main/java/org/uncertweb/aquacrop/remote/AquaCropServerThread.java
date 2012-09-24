@@ -8,7 +8,7 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.uncertweb.aquacrop.AquaCropException;
-import org.uncertweb.aquacrop.AquaCropRunner;
+import org.uncertweb.aquacrop.AquaCropInterface;
 import org.uncertweb.aquacrop.data.Output;
 import org.uncertweb.aquacrop.data.Project;
 
@@ -33,7 +33,7 @@ public class AquaCropServerThread extends Thread {
 		ObjectOutputStream oos = null;
 		
 		try {
-			AquaCropRunner runner = new AquaCropRunner(aquaCropBase, aquaCropPrefix, aquaCropBaseOverride);
+			AquaCropInterface runner = new AquaCropInterface(aquaCropBase, aquaCropPrefix, aquaCropBaseOverride);
 
 			ois = new ObjectInputStream(socket.getInputStream());
 			oos = new ObjectOutputStream(socket.getOutputStream());
