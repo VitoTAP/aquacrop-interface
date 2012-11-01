@@ -8,6 +8,8 @@ import org.joda.time.LocalDate;
 
 public class EvapotranspirationMeasurements implements Serializable {
 	
+	private static final long serialVersionUID = 2341085158031763564L;
+	
 	private Frequency frequency;
 	private LocalDate firstDay;
 	private List<Double> measurements;

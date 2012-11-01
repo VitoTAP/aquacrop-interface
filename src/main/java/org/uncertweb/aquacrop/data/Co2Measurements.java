@@ -8,6 +8,8 @@ import java.util.Set;
 
 public class Co2Measurements implements Serializable {
 	
+	private static final long serialVersionUID = 4537930072502959840L;
+	
 	private LinkedHashMap<Integer, Double> measurements;
 
 	public Co2Measurements() {

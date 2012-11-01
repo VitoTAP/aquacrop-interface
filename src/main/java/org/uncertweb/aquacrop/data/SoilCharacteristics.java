@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class SoilCharacteristics implements Serializable {
-
+	
+	private static final long serialVersionUID = 4098454278343937985L;
+	
 	private int curveNumber = 75;
 	private int evaporableWater; // Readily	evaporable	water	from	top	layer	(mm)	
 	private Collection<SoilHorizon> horizons;
@@ -54,7 +56,9 @@ public class SoilCharacteristics implements Serializable {
 	}
 	
 	public class SoilHorizon implements Serializable {
-
+		
+		private static final long serialVersionUID = -3578882836751152658L;
+		
 		private String description;
 		private double thickness;
 		private double pwp;

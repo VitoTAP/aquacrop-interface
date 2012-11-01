@@ -3,7 +3,9 @@ package org.uncertweb.aquacrop.data;
 import java.io.Serializable;
 
 public class CropCharacteristics implements Serializable {
-
+	
+	private static final long serialVersionUID = -2388071923372171201L;
+	
 	private int cropType = 2; // fruit/grain producing
 	private boolean sown = true; // crop is sown
 	private int cropCycle = 0; // determination of crop cycle: by growing degree-days

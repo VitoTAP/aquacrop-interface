@@ -8,6 +8,8 @@ import org.joda.time.LocalDate;
 
 public class TemperatureMeasurements implements Serializable {
 
+	private static final long serialVersionUID = -1976427767705906586L;
+	
 	private Frequency frequency;
 	private LocalDate firstDay;
 	private List<TemperatureMeasurement> measurements;
@@ -39,6 +41,9 @@ public class TemperatureMeasurements implements Serializable {
 	}	
 
 	public class TemperatureMeasurement implements Serializable {
+		
+		private static final long serialVersionUID = 2880741391657561766L;
+		
 		private double minimum;
 		private double maximum;
 		
@@ -54,6 +59,7 @@ public class TemperatureMeasurements implements Serializable {
 		public double getMaximum() {
 			return maximum;
 		}
+		
 	}
 
 }

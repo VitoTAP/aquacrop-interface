@@ -8,6 +8,8 @@ import org.joda.time.LocalDate;
 
 public class RainfallMeasurements implements Serializable {
 	
+	private static final long serialVersionUID = -8312683446337977397L;
+	
 	private Frequency frequency;
 	private LocalDate firstDay;
 	private List<Double> measurements;

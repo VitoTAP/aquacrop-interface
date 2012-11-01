@@ -3,7 +3,9 @@ package org.uncertweb.aquacrop.data;
 import java.io.Serializable;
 
 public class ClimateCharacteristics implements Serializable {
-
+	
+	private static final long serialVersionUID = 8807175802244956106L;
+	
 	private RainfallMeasurements rainfall; //rainfall
 	private EvapotranspirationMeasurements eto;	//eto
 	private TemperatureMeasurements temperature; //temp
