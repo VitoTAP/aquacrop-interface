@@ -1,0 +1,11 @@
+Soil characteristics
+$aquaCropVersion
+$soilCharacteristics.getCurveNumber()
+$soilCharacteristics.getEvaporableWater()
+$soilCharacteristics.getSoilHorizons().size()
+$soilCharacteristics.getRestrictiveSoilLayerDepth()
+Thickness	Sat	FC	WP	Ksat	description
+---(m)-	----(vol %)-----	(mm/day)	---------------------------------
+#foreach( $horizon in $soilCharacteristics.getSoilHorizons() )
+$horizon.getThickness()	$horizon.getSat()	$horizon.getFc()	$horizon.getPwp()	$horizon.getkSat()	$horizon.getDescription()
+#end

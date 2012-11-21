@@ -1,0 +1,6 @@
+CO2 measurements
+Year	CO2 (ppm by volume)
+=======================
+#foreach( $year in $co2Measurements.getYears() )
+$year	$co2Measurements.getMeasurement($year)
+#end

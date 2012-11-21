@@ -1,0 +1,12 @@
+Precipitation measurements
+#set( $frequency = $rainfallMeasurements.getFrequency().ordinal() + 1 )
+$frequency
+$rainfallMeasurements.getFirstDay().getDayOfMonth()
+$rainfallMeasurements.getFirstDay().getMonthOfYear()
+$rainfallMeasurements.getFirstDay().getYear()
+
+Total Rain (mm)
+=======================
+#foreach( $measurement in $rainfallMeasurements.getMeasurements() )
+$measurement
+#end

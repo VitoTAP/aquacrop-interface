@@ -1,0 +1,56 @@
+$project.getTitle()
+$aquaCropVersion
+$simPeriodStart
+$simPeriodEnd
+$cropPeriodStart
+$cropPeriodEnd
+$project.getEvaporationDeclineFactor()
+$project.getEvaporationCoefficient()
+$project.getThreshold()
+$project.getRootStartDepth()
+$project.getRootMax()
+$project.getRootShapeFactor()
+$project.getSoilWaterContent()
+$project.getSoilAdjustmentFactor()
+$project.getDeficientAerationDays()
+$project.getSenescenceFactorExponent()
+$project.getSenescenceDecrease()
+$project.getSoilProfileDepth()
+$project.getConsideredSoilProfileDepth()
+$antecedentAdjust
+$project.getDefaultMinTemperature()
+$project.getDefaultMaxTemperature()
+$project.getDefaultGrowingMethod()
+-- 1. Climate (CLI) file
+${filename}.CLI
+$basePath\
+1.1 Temperature (TMP) file
+${filename}.TMP
+$basePath\
+1.2 Reference ET (ETo) file
+${filename}.ETO
+$basePath\
+1.3 Rain (PLU) file
+${filename}.PLU
+$basePath\
+1.4 Atmospheric CO2 (CO2) file
+${filename}.CO2
+$basePath\
+-- 2. Crop (CRO) file
+${filename}.CRO
+$basePath\
+-- 3. Irrigation (IRR) file
+(None)
+(None)
+-- 4. Management (MAN) file
+(None)
+(None)
+-- 5. Soil (SOL) file
+${filename}.SOL
+$basePath\
+-- 6. Initial conditions (SW0) file
+(None)
+(None)
+-- 7. Off-season conditions (OFF) file
+(None)
+(None)

@@ -1,0 +1,12 @@
+Evapotranspiration measurements
+#set( $frequency = $etMeasurements.getFrequency().ordinal() + 1 )
+$frequency
+$etMeasurements.getFirstDay().getDayOfMonth()
+$etMeasurements.getFirstDay().getMonthOfYear()
+$etMeasurements.getFirstDay().getYear()
+
+Average ETo (mm/day)
+=======================
+#foreach( $measurement in $etMeasurements.getMeasurements() )
+$measurement
+#end

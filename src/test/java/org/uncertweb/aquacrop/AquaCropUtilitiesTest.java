@@ -8,20 +8,20 @@ import org.junit.Test;
 public class AquaCropUtilitiesTest {
 
 	/**
-	 * Using example (from http://www.fao.org/nr/water/docs/AquaCropPlugInV31plus.pdf)
-	 * 
-	 * For 24 August 1982:
-	 * 	1. Subtract 1901 from the year 1982 - 1901 = 81 
-	 * 	2. Multiply by 365.25 81 x 365.25 = 29585.25
-	 * 	3. Add 212.25 for August 29585.25 + 212.25 = 29797.5
-	 * 	4. Add the number of the day 29797.5 + 24 = 29821.5
-	 * 	5. Take the integer  29821
-	 * 
+	 * Test using example from AquaCrop documentation
+	 * (http://www.fao.org/nr/water/docs/AquaCropPlugInV31plus.pdf).	 
 	 */
 	@Test
-	public void testConvertDateToInt() {
+	public void convertDateToInt() {
 		LocalDate date = new LocalDate(1982, 8, 24);
 		Assert.assertEquals(29821, AquaCropUtilities.convertDateToInt(date));
+	}
+	
+	@Test
+	public void formatDate() {
+		LocalDate date = new LocalDate(1982, 8, 8);
+		String formatted = AquaCropUtilities.formatDate(date);
+		Assert.assertEquals("08-08-1982", formatted);
 	}
 	
 }

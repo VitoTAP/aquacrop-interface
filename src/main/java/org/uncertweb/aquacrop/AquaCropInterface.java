@@ -62,6 +62,9 @@ public class AquaCropInterface {
 	}
 
 	public Output run(Project project) throws AquaCropException {
+		// check given params are sensible
+		preRunChecks();
+		
 		// generate an id
 		final String runId = String.valueOf(System.currentTimeMillis());
 
@@ -69,8 +72,21 @@ public class AquaCropInterface {
 		try {
 			// this will create all data files
 			logger.debug("Serializing project.");
-			AquaCropSerializer.serializeProject(project, basePath, basePathOverride, runId);
+			AquaCropSerializer serializer = new AquaCropSerializer(runId, basePath, basePathOverride);
+			serializer.serialize(project);
+						
+			// move serialized files
+			moveFile(basePath, runId + ".PRO", "ACsaV31plus/LIST/");
+			moveFile(basePath, runId + ".CRO", "AquaCrop/DATA/");
+			moveFile(basePath, runId + ".PLU", "AquaCrop/DATA/");
+			moveFile(basePath, runId + ".TMP", "AquaCrop/DATA/");
+			moveFile(basePath, runId + ".SOL", "AquaCrop/DATA/");
+			moveFile(basePath, runId + ".CO2", "AquaCrop/DATA/");
+			moveFile(basePath, runId + ".ETO", "AquaCrop/DATA/");			
 
+			// PRO to ACsaV31plus/LIST/
+			// everything else to AquaCrop/DATA/
+			
 			// get runtime
 			logger.debug("Getting runtime.");
 			Runtime runtime = Runtime.getRuntime();
@@ -153,6 +169,19 @@ public class AquaCropInterface {
 			}
 			new File(basePath, "ACsaV31plus/LIST/" + runId + ".PRO").delete();
 		}
+	}
+
+	private void preRunChecks() throws AquaCropException {
+		// check given params are sensible
+		boolean basePathExists = new File(basePath).exists();
+		if (!basePathExists) {
+			throw new AquaCropException("Can't find AquaCrop executables at " + basePath + ".");
+		}
+	}
+
+	private void moveFile(String path, String filename, String dest) {
+		File file = new File(new File(path), filename);
+		file.renameTo(new File(dest));
 	}
 
 	private static Output deserializeOutput(Reader reader) throws FileNotFoundException, IOException {

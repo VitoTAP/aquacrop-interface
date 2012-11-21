@@ -1,0 +1,12 @@
+Temperature measurements
+#set( $frequency = $temperatureMeasurements.getFrequency().ordinal() + 1 )
+$frequency
+$temperatureMeasurements.getFirstDay().getDayOfMonth()
+$temperatureMeasurements.getFirstDay().getMonthOfYear()
+$temperatureMeasurements.getFirstDay().getYear()
+
+Tmin (C)	TMax (C)
+=======================
+#foreach( $measurement in $temperatureMeasurements.getMeasurements() )
+$measurement.getMinimum()	$measurement.getMaximum()
+#end

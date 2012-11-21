@@ -1,0 +1,5 @@
+AquaCrop 3.1plus (March 2011) - Output created on (date) : 16/03/2012   at (time) : 09:19:49
+
+   Period     Day1   Month1    Year1    Rain      ETo      GDD     CO2      Irri    Infilt       E       E/Ex     Tr     Tr/Trx  Drain   BioMass     Br(w)  Br(wsf)  WPet(B)     HI     Yield   WPet(Y)    DayN   MonthN    YearN  File
+                                          mm       mm    °C.day    ppm        mm       mm       mm         %      mm         %      mm    ton/ha        %        %    kg/m3       %    ton/ha     kg/m3
+   Tot(1)        1       10     2010    403.0    407.7   1274.9   385.60      0.0    403.0    203.7       90    175.3       80    106.3    4.948       71       71     1.31     -9.9    0.000     0.00       25        4     2011  1331889588972.PRO
