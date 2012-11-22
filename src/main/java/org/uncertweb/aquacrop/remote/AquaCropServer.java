@@ -15,10 +15,55 @@ import org.slf4j.LoggerFactory;
  */
 public class AquaCropServer {
 
+	private static final Logger logger = LoggerFactory.getLogger(AquaCropServer.class);
+	
+	private int port;
+	private String basePath;
+	private String prefixCommand;
+	private String basePathOverride;
+	private ServerSocket serverSocket;
+
+	public AquaCropServer(int port, String basePath) {
+		this(port, basePath, null, null);
+	}
+
+	public AquaCropServer(int port, String basePath, String prefixCommand, String basePathOverride) {
+		this.port = port;
+		this.basePath = basePath;
+		this.prefixCommand = prefixCommand;
+		this.basePathOverride = basePathOverride;
+	}
+
+	public void start() throws IOException {
+		// start socket		
+		serverSocket =  new ServerSocket(port);
+		logger.info("Listening on port " + port + "...");
+
+		// request loop
+		while (true && !serverSocket.isClosed()) {
+			try {
+				Socket clientSocket = serverSocket.accept();
+				logger.info("Client " + clientSocket.getRemoteSocketAddress() + " connected.");
+				new AquaCropServerThread(clientSocket, basePath, prefixCommand, basePathOverride).start();
+			}
+			catch (IOException e) {
+				if (!serverSocket.isClosed()) {
+					logger.error("Could not accept client connection: " + e.getMessage());
+				}
+			}
+		}
+	}
+
+	public void stop() throws IOException {
+		if (serverSocket != null) {
+			logger.info("Stopped listening on port " + port + ".");
+			serverSocket.close();
+		}
+	}
+
 	public static void main(String[] args) {
-		final Logger logger = LoggerFactory.getLogger(AquaCropServer.class);
 		if (args.length > 1) {			
-			// get arguments
+			// parse arguments
 			int port = Integer.parseInt(args[0]);
 			String basePath = args[1];
 			String prefixCommand = null;
@@ -33,47 +78,38 @@ public class AquaCropServer {
 			if (basePathOverride != null) {
 				logger.info("Using " + basePathOverride + " as path override.");
 			}
+
+			// create and start		
+			final AquaCropServer server = new AquaCropServer(port, basePath, prefixCommand, basePathOverride);
 			
-			// all ok, run server
-			ServerSocket serverSocket = null;
-
-			try {
-				serverSocket = new ServerSocket(port);
-				logger.info("Listening on port " + port + "...");
-
-				while (true) {
+			// hook to shutdown gracefully
+			Runtime.getRuntime().addShutdownHook(new Thread() {
+				@Override
+				public void run() {
 					try {
-						Socket socket = serverSocket.accept();
-						logger.info("Client " + socket.getRemoteSocketAddress() + " connected.");
-						new AquaCropServerThread(socket, basePath, prefixCommand, basePathOverride).run();
+						server.stop();
 					}
 					catch (IOException e) {
-						logger.error("Could not accept client connection: " + e.getMessage());
+						logger.warn("Couldn't shutdown server gracefully, sockets may still be open.");
 					}
 				}
+			});
+			
+			try {
+				// start
+				server.start();
 			}
 			catch (IOException e) {
-				logger.error("Could not listen on port " + port + ".");
-				System.err.println("Could not listen on port " + port + ".");
-			}
-			finally {
-				if (serverSocket != null) {
-					try {
-						serverSocket.close();
-					}
-					catch (IOException e) {
-						logger.error("Could not close server socket on port " + port + ".");
-					}
-				}		
+				System.err.println("Could not listen on port " + port + ", is it already in use?");
 			}
 		}
 		else {
 			AquaCropServer.printUsage();
 		}
 	}
-	
+
 	private static void printUsage() {
-		System.out.println("Usage: aquacrop-runner PORT BASE [PREFIX]");
+		System.out.println("Usage: aquacrop-interface PORT BASE [PREFIX]");
 		System.out.println(" PORT the port you wish the server to listen on");
 		System.out.println(" BASE the path to where AquaCrop and ACsaV31plus directories can be found");
 		System.out.println(" PREFIX the prefix command for running the executables");

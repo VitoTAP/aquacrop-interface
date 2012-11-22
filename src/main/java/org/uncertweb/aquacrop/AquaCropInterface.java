@@ -69,7 +69,7 @@ public class AquaCropInterface {
 		final String runId = String.valueOf(System.currentTimeMillis());
 
 		// serialize project and run
-		try {
+		try {			
 			// this will create all data files
 			logger.debug("Serializing project.");
 			AquaCropSerializer serializer = new AquaCropSerializer(runId, basePath, basePathOverride);
@@ -108,7 +108,7 @@ public class AquaCropInterface {
 	            
 	            // wait for process
 	            // we could be waiting forever if there's been an error...
-	            logger.debug("Waiting for process to end."); 
+	            logger.debug("Waiting for process to end..."); 
 				boolean done = false;
 				while (!done) {
 					if (outputFile.exists()) {
@@ -142,7 +142,7 @@ public class AquaCropInterface {
 			
 			if (output == null) {
 				// must be a problem running AquaCrop, but unfortunately it only gives error messages in dialogs!
-				String message = "Couldn't parse AquaCrop empty output, parameters may be invalid.";
+				String message = "Couldn't parse empty AquaCrop output, parameters may be invalid.";
 				logger.error(message);
 				throw new AquaCropException(message);
 			}

@@ -44,11 +44,11 @@ public class AquaCropClient {
 			if (response instanceof Output) {
 				return (Output) response;
 			}
-			else if (response instanceof AquaCropException) {
-				throw (AquaCropException) response;
+			else if (response instanceof AquaCropRemoteException) {
+				throw (AquaCropRemoteException) response;
 			}
 			else {
-				throw (AquaCropRemoteException) response;
+				throw (AquaCropException) response;
 			}
 		}
 		catch (ClassNotFoundException e) {

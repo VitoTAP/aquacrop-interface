@@ -1,8 +1,10 @@
 package org.uncertweb.aquacrop.remote;
 
-public class AquaCropRemoteException extends Exception {
+import org.uncertweb.aquacrop.AquaCropException;
 
-	private static final long serialVersionUID = 1L;
+public class AquaCropRemoteException extends AquaCropException {
+	
+	private static final long serialVersionUID = 3412044012844640236L;
 
 	public AquaCropRemoteException() {
 		super();

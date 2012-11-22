@@ -1,15 +1,21 @@
 package org.uncertweb.aquacrop;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.uncertweb.aquacrop.data.Output;
 import org.uncertweb.aquacrop.data.Project;
 import org.uncertweb.aquacrop.test.TestData;
 import org.uncertweb.aquacrop.test.TestEnvironment;
 
 public class AquaCropInterfaceTest {
+	
+	@Rule
+    public ExpectedException exception = ExpectedException.none();
 
 	private AquaCropInterface iface;
 	
@@ -21,79 +27,132 @@ public class AquaCropInterfaceTest {
 	
 	@Test
 	public void runReturnsOutput() throws AquaCropException {
+		Output output = runNormalProject();
+		assertNotNull(output);
+	}
+	
+	@Test
+	public void runReturnsRain() throws AquaCropException {
+		Output output = runNormalProject();
+		assertEquals(403.0, output.getRain(), 0.0);
+	}
+	
+	@Test
+	public void runReturnsEto() throws AquaCropException {
+		Output output = runNormalProject();
+	    assertEquals(407.7, output.getEto(), 0.0);	
+	}
+	
+	@Test
+	public void runReturnsGdd() throws AquaCropException {
+		Output output = runNormalProject();
+		assertEquals(1274.9, output.getGdd(), 0.0);
+	}
+	 
+	@Test
+	public void runReturnsCo2() throws AquaCropException {
+		Output output = runNormalProject();
+		assertEquals(385.6, output.getCo2(), 0.0);
+	}
+	
+	@Test
+	public void runReturnsIrri() throws AquaCropException {
+		Output output = runNormalProject();
+	    assertEquals(0.0, output.getIrri(), 0.0);
+	}
+	 
+	@Test
+	public void runReturnsInfilt() throws AquaCropException {
+		Output output = runNormalProject();
+	    assertEquals(403.0, output.getInfilt(), 0.0);
+	}
+	
+	@Test
+	public void runReturnsE() throws AquaCropException {
+		Output output = runNormalProject();
+		assertEquals(203.7, output.getE(), 0.0); 
+	}
+	
+	@Test
+	public void runReturnseEx() throws AquaCropException {
+		Output output = runNormalProject();
+		assertEquals(90, output.geteEx(), 0.0); 
+	}
+
+	@Test
+	public void runReturnsTr() throws AquaCropException {
+		Output output = runNormalProject();
+		assertEquals(175.3, output.getTr(), 0.0);
+	}
+	
+	@Test
+	public void runReturnstTrTrx() throws AquaCropException {
+		Output output = runNormalProject();
+		assertEquals(80, output.getTrTrx(), 0.0);
+	}
+	
+	@Test
+	public void runReturnsDrain() throws AquaCropException {
+		Output output = runNormalProject();
+		assertEquals(106.3, output.getDrain(), 0.0); 
+	}
+	 
+	@Test
+	public void runReturnsBioMass() throws AquaCropException {
+		Output output = runNormalProject();
+		assertEquals(4.948, output.getBioMass(), 0.0);       
+	}
+	
+	@Test
+	public void runReturnsBrW() throws AquaCropException {
+		Output output = runNormalProject();
+		assertEquals(71, output.getBrW(), 0.0);       
+	}
+	
+	@Test
+	public void runReturnsBrWsf() throws AquaCropException {
+		Output output = runNormalProject();
+		assertEquals(71, output.getBrWsf(), 0.0);
+	}
+
+	@Test
+	public void runReturnswPetB() throws AquaCropException {
+		Output output = runNormalProject();
+		assertEquals(1.31, output.getwPetB(), 0.0);
+	}
+	
+	@Test
+	public void runReturnsHi() throws AquaCropException {
+		Output output = runNormalProject();
+	    assertEquals(-9.9, output.getHi(), 0.0);
+	}
+	
+	@Test
+	public void runReturnsYield() throws AquaCropException {
+		Output output = runNormalProject();
+	    assertEquals(0.0, output.getYield(), 0.0);
+	}
+
+	@Test
+	public void runReturnswPetY() throws AquaCropException {
+		Output output = runNormalProject();
+	    assertEquals(0.0, output.getwPetY(), 0.0);
+	}
+	
+	@Test
+	public void runExceptionForInvalidProject() throws AquaCropException {
+		// get invalid project
 		Project project = TestData.getProject();
-		Output output = iface.run(project);
-		Assert.assertNotNull(output);
+		project.getCropCharacteristics().setNumPlants(-1); // invalid
+		
+		// run
+		exception.expect(AquaCropException.class);
+		iface.run(project);		
 	}
-
-//	
-//	public void remoteSend() throws AquaCropException, AquaCropRemoteException, IOException, InterruptedException {
-//		// normal send
-//		Output output = runProjectRemotely();
-//		assertNotNull(output);
-//	}
-//	
-//	public void remoteStress() throws AquaCropException, AquaCropRemoteException, IOException, InterruptedException {
-//		for (int i = 0; i < 2000; i++) {
-//			System.out.println(i + 1 + ": " + runProjectRemotely().toString());
-//			Thread.sleep(1000 * 1); // 1 second rest
-//		}
-//	}
-//	
-//	public void remoteFailure() throws AquaCropException, AquaCropRemoteException, IOException {
-//		// get existing value
-//		int numPlants = project.getCropCharacteristics().getNumPlants();
-//		
-//		// set to dodgy one
-//		project.getCropCharacteristics().setNumPlants(-1);
-//		
-//		// try execute
-//		Output dodgyOutput = null;
-//		try {
-//			dodgyOutput = runProjectRemotely();
-//		}
-//		catch (AquaCropException e) {
-//			// should be null
-//			assertNull(dodgyOutput);
-//			
-//			// back to existing
-//			project.getCropCharacteristics().setNumPlants(numPlants);
-//			
-//			// should be fine
-//			Output fineOutput = runProjectRemotely();
-//			assertNotNull(fineOutput);
-//		}
-//	}
-//	
-//	private Output runProjectRemotely() throws AquaCropException, AquaCropRemoteException, IOException {
-//		AquaCropClient client = new AquaCropClient("cs-lightning", 44446);
-//		return client.send(project);
-//	}
 	
-	/*
-	public void testSerializeProject() throws IOException {
-		FileWriter writer = new FileWriter(new File("src/test/resources/TestWrite.PRO"));
-		AquaCropRunner.serializeProject(project, writer);
-		writer.close();
+	private Output runNormalProject() throws AquaCropException {
+		Project project = TestData.getProject();
+		return iface.run(project);
 	}
-
-	public void testDeserializeOutput() throws IOException {
-		File outputFile = new File("src/test/resources/TestPRO.OUT");
-		Output output = AquaCropRunner.deserializeOutput(new FileReader(outputFile));
-		System.out.println(output.toString());
-	}*/
-
-//	public void testRunner() throws IOException {
-//		try {
-//			AquaCropRunner runner = new AquaCropRunner("C:\\FAO");
-//			Output output = runner.run(project);
-//			System.out.println(output.toString());
-//		}
-//		catch (AquaCropException e) {
-//			System.out.println(e.getMessage());
-//		}
-//	}
 	
-	
-
 }

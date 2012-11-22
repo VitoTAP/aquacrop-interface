@@ -41,7 +41,7 @@ public class AquaCropServerThread extends Thread {
 			// parse object
 			try {
 				Project project = (Project) ois.readObject();
-				logger.info("Received project" + (project.getTitle() != null ?  " '" + project.getTitle() + "' " : "") + ".");
+				logger.info("Received project" + (project.getTitle() != null ?  " '" + project.getTitle() + "'" : "") + ".");
 
 				try {
 					Output output = runner.run(project);					
