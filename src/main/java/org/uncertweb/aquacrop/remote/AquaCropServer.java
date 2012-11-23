@@ -3,6 +3,8 @@ package org.uncertweb.aquacrop.remote;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,11 +42,12 @@ public class AquaCropServer {
 		logger.info("Listening on port " + port + "...");
 
 		// request loop
+		ExecutorService pool = Executors.newFixedThreadPool(4);
 		while (true && !serverSocket.isClosed()) {
 			try {
 				Socket clientSocket = serverSocket.accept();
 				logger.info("Client " + clientSocket.getRemoteSocketAddress() + " connected.");
-				new AquaCropServerThread(clientSocket, basePath, prefixCommand, basePathOverride).start();
+				pool.execute(new AquaCropServerThread(clientSocket, basePath, prefixCommand, basePathOverride));
 			}
 			catch (IOException e) {
 				if (!serverSocket.isClosed()) {
