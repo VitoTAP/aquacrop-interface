@@ -4,10 +4,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.Reader;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.uncertweb.aquacrop.data.Output;
@@ -67,22 +67,24 @@ public class AquaCropInterface {
 		
 		// generate an id
 		final String runId = String.valueOf(System.currentTimeMillis());
+		
+		// generate run folder
+		File runDir = new File(basePath, "aquacrop_" + runId);
+		String runPath = runDir.getAbsolutePath();
+		try {
+			FileUtils.copyDirectoryToDirectory(new File(basePath, "ACsaV31plus"), runDir);
+			FileUtils.copyDirectoryToDirectory(new File(basePath, "AquaCrop"), runDir);
+		}
+		catch (IOException e) {
+			throw new AquaCropException("Couldn't create run directory.", e);
+		}
 
 		// serialize project and run
 		try {			
 			// this will create all data files
 			logger.debug("Serializing project.");
-			AquaCropSerializer serializer = new AquaCropSerializer(runId, basePath, basePathOverride);
+			AquaCropSerializer serializer = new AquaCropSerializer(runId, runPath, basePathOverride);
 			serializer.serialize(project);
-						
-			// move serialized files
-			moveFile(basePath, runId + ".PRO", "ACsaV31plus/LIST/");
-			moveFile(basePath, runId + ".CRO", "AquaCrop/DATA/");
-			moveFile(basePath, runId + ".PLU", "AquaCrop/DATA/");
-			moveFile(basePath, runId + ".TMP", "AquaCrop/DATA/");
-			moveFile(basePath, runId + ".SOL", "AquaCrop/DATA/");
-			moveFile(basePath, runId + ".CO2", "AquaCrop/DATA/");
-			moveFile(basePath, runId + ".ETO", "AquaCrop/DATA/");			
 
 			// PRO to ACsaV31plus/LIST/
 			// everything else to AquaCrop/DATA/
@@ -92,13 +94,13 @@ public class AquaCropInterface {
 			Runtime runtime = Runtime.getRuntime();
 			
 			// for monitoring and reading
-			File outputFile = new File(basePath, "ACsaV31plus/OUTP/" + runId + "PRO.OUT");
+			File outputFile = new File(runPath, "ACsaV31plus/OUTP/" + runId + "PRO.OUT");
 
 			// run program
 			try {			
 				// start aquacrop process
 				logger.debug("Starting process.");
-				Process process = runtime.exec((prefixCommand != null ? prefixCommand + " " : "") + basePath + "/ACsaV31plus/ACsaV31plus.exe");
+				Process process = runtime.exec((prefixCommand != null ? prefixCommand + " " : "") + runPath + "/ACsaV31plus/ACsaV31plus.exe");
 				
 				// consume streams
 				StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream());            
@@ -109,25 +111,24 @@ public class AquaCropInterface {
 	            // wait for process
 	            // we could be waiting forever if there's been an error...
 	            logger.debug("Waiting for process to end..."); 
-				boolean done = false;
-				while (!done) {
-					if (outputFile.exists()) {
-						done = true;
-	            		Thread.sleep(1000); // wait for write
-						process.destroy(); // force required if error
-					}
-					else {
-	            		Thread.sleep(500);
-					}
-				}
-//				logger.debug("Waiting for process to end."); 
-//				process.waitFor();
+//				boolean done = false;
+//				while (!done) {
+//					if (outputFile.exists()) {
+//						done = true;
+//	            		Thread.sleep(1000); // wait for write
+//						process.destroy(); // force required if error
+//					}
+//					else {
+//	            		Thread.sleep(500);
+//					}
+//				}
+				process.waitFor();
 			}
 			catch (IOException e) {
-				throw new AquaCropException("Couldn't run AquaCrop: " + e.getMessage());
+				throw new AquaCropException("Couldn't run AquaCrop: " + e.getMessage(), e);
 			}
 			catch (InterruptedException e) {
-				throw new AquaCropException("Couldn't run AquaCrop: " + e.getMessage());
+				throw new AquaCropException("Couldn't run AquaCrop: " + e.getMessage(), e);
 			}
 
 			// parse output
@@ -135,15 +136,10 @@ public class AquaCropInterface {
 			FileReader reader = new FileReader(outputFile);
 			Output output = AquaCropInterface.deserializeOutput(reader);
 			reader.close();
-
-			// remove output file
-			logger.debug("Removing output file.");
-			outputFile.delete();
 			
 			if (output == null) {
 				// must be a problem running AquaCrop, but unfortunately it only gives error messages in dialogs!
 				String message = "Couldn't parse empty AquaCrop output, parameters may be invalid.";
-				logger.error(message);
 				throw new AquaCropException(message);
 			}
 			else {
@@ -154,20 +150,16 @@ public class AquaCropInterface {
 		catch (IOException e) {
 			// will be from creating the project file, or reading the output file
 			String message = "Error reading input/output files: " + e.getMessage();
-			logger.error(message);
-			throw new AquaCropException(message);
+			throw new AquaCropException(message, e);
 		}
 		finally {
-			// clean up input files			
-			File dataDir = new File(basePath, "AquaCrop/DATA/");
-			for (File dataFile : dataDir.listFiles(new FilenameFilter() {
-				public boolean accept(File arg0, String arg1) {
-					return (arg1.startsWith(runId));
-				}				
-			})) {
-				dataFile.delete();
+			// clean up input files
+			try {
+				FileUtils.deleteDirectory(runDir);
 			}
-			new File(basePath, "ACsaV31plus/LIST/" + runId + ".PRO").delete();
+			catch (IOException e) {
+				logger.warn("Couldn't remove output directory.", e);
+			}
 		}
 	}
 
@@ -177,11 +169,6 @@ public class AquaCropInterface {
 		if (!basePathExists) {
 			throw new AquaCropException("Can't find AquaCrop executables at " + basePath + ".");
 		}
-	}
-
-	private void moveFile(String path, String filename, String dest) {
-		File file = new File(new File(path), filename);
-		file.renameTo(new File(dest));
 	}
 
 	private static Output deserializeOutput(Reader reader) throws FileNotFoundException, IOException {

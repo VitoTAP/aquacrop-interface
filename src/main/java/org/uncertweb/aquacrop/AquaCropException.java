@@ -16,4 +16,8 @@ public class AquaCropException extends Exception {
 		super(cause);
 	}
 	
+	public AquaCropException(String message, Throwable cause) {
+		super(message, cause);
+	}
+	
 }
