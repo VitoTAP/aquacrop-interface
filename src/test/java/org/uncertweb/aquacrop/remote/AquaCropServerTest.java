@@ -22,7 +22,7 @@ import org.junit.rules.ExpectedException;
 import org.uncertweb.aquacrop.AquaCropException;
 import org.uncertweb.aquacrop.data.Output;
 import org.uncertweb.aquacrop.data.Project;
-import org.uncertweb.aquacrop.test.TestData;
+import org.uncertweb.aquacrop.data.sample.SampleData;
 import org.uncertweb.aquacrop.test.TestEnvironment;
 
 public class AquaCropServerTest {
@@ -62,13 +62,13 @@ public class AquaCropServerTest {
 	@Test
 	public void serverHandlesRequest() throws AquaCropRemoteException, IOException, AquaCropException {
 		AquaCropClient client = new AquaCropClient("localhost", port);
-		Output output = client.send(TestData.getProject());
+		Output output = client.send(SampleData.getProject());
 		assertNotNull(output);
 	}
 
 	@Test
 	public void serverHandlesInvalidProject() throws AquaCropRemoteException, IOException, AquaCropException {
-		Project project = TestData.getProject();
+		Project project = SampleData.getProject();
 		project.getCropCharacteristics().setNumPlants(-1); // invalid
 		AquaCropClient client = new AquaCropClient("localhost", port);
 		exception.expect(AquaCropException.class);
@@ -133,7 +133,7 @@ public class AquaCropServerTest {
 		private int requestCount;
 
 		public ProjectSender(int requestCount) {
-			this.project = TestData.getProject();
+			this.project = SampleData.getProject();
 			this.requestCount = requestCount;
 		}
 
@@ -154,7 +154,7 @@ public class AquaCropServerTest {
 		private int requestCount;
 
 		public InvalidProjectSender(int requestCount) {
-			this.project = TestData.getProject();
+			this.project = SampleData.getProject();
 			this.project.getCropCharacteristics().setNumPlants(-1); // invalid
 			this.requestCount = requestCount;
 		}

@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.uncertweb.aquacrop.data.Output;
 import org.uncertweb.aquacrop.data.Project;
-import org.uncertweb.aquacrop.test.TestData;
+import org.uncertweb.aquacrop.data.sample.SampleData;
 import org.uncertweb.aquacrop.test.TestEnvironment;
 
 public class AquaCropInterfaceTest {
@@ -143,7 +143,7 @@ public class AquaCropInterfaceTest {
 	@Test
 	public void runExceptionForInvalidProject() throws AquaCropException {
 		// get invalid project
-		Project project = TestData.getProject();
+		Project project = SampleData.getProject();
 		project.getCropCharacteristics().setNumPlants(-1); // invalid
 		
 		// run
@@ -153,7 +153,7 @@ public class AquaCropInterfaceTest {
 	
 	private Output runNormalProject() throws AquaCropException {
 		if (normalProjectOutput == null) {
-			Project project = TestData.getProject();
+			Project project = SampleData.getProject();
 			normalProjectOutput = iface.run(project);
 		}
 		return normalProjectOutput;

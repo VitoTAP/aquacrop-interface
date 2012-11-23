@@ -1,4 +1,4 @@
-a test project
+A sample project
 3.1
 40086
 40292

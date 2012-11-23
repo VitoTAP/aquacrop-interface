@@ -22,7 +22,7 @@ import org.uncertweb.aquacrop.data.Project;
 import org.uncertweb.aquacrop.data.RainfallMeasurements;
 import org.uncertweb.aquacrop.data.SoilCharacteristics;
 import org.uncertweb.aquacrop.data.TemperatureMeasurements;
-import org.uncertweb.aquacrop.test.TestData;
+import org.uncertweb.aquacrop.data.sample.SampleData;
 
 public class AquaCropSerializerTest {
 	
@@ -43,35 +43,35 @@ public class AquaCropSerializerTest {
 
 	@Test
 	public void temperatureMeasurements() throws IOException {
-		TemperatureMeasurements measurements = TestData.getTemperatureMeasurements();
+		TemperatureMeasurements measurements = SampleData.getTemperatureMeasurements();
 		serializer.serialize(measurements);
 		testFile("TMP");
 	}
 	
 	@Test
 	public void soilCharacteristics() throws IOException {
-		SoilCharacteristics soil = TestData.getSoilCharacteristics();
+		SoilCharacteristics soil = SampleData.getSoilCharacteristics();
 		serializer.serialize(soil);
 		testFile("SOL");
 	}
 	
 	@Test
 	public void co2Measurements() throws IOException {
-		Co2Measurements measurements = TestData.getCo2Measurements();
+		Co2Measurements measurements = SampleData.getCo2Measurements();
 		serializer.serialize(measurements);
 		testFile("CO2");
 	}
 	
 	@Test
 	public void rainfallMeasurements() throws IOException {
-		RainfallMeasurements measurements = TestData.getRainfallMeasurements();
+		RainfallMeasurements measurements = SampleData.getRainfallMeasurements();
 		serializer.serialize(measurements);
 		testFile("PLU");
 	}
 	
 	@Test
 	public void climateCharacteristics() throws IOException {
-		ClimateCharacteristics characteristics = TestData.getClimateCharacteristics();
+		ClimateCharacteristics characteristics = SampleData.getClimateCharacteristics();
 		serializer.serialize(characteristics);
 		testFile("CLI");
 		testFile("TMP");
@@ -82,21 +82,21 @@ public class AquaCropSerializerTest {
 	
 	@Test
 	public void cropCharacteristics() throws IOException {	
-		CropCharacteristics characteristics = TestData.getCropCharacteristics();
+		CropCharacteristics characteristics = SampleData.getCropCharacteristics();
 		serializer.serialize(characteristics);
 		testFile("CRO");
 	}
 	
 	@Test
 	public void evapotranspirationMeasurements() throws IOException {
-		EvapotranspirationMeasurements measurements = TestData.getEvapotranspirationMeasurements();
+		EvapotranspirationMeasurements measurements = SampleData.getEvapotranspirationMeasurements();
 		serializer.serialize(measurements);
 		testFile("ETO");
 	}
 	
 	@Test
 	public void project() throws IOException {
-		Project project = TestData.getProject();
+		Project project = SampleData.getProject();
 		serializer.serialize(project);
 		testFile("PRO");
 		testFile("CLI");
@@ -112,7 +112,7 @@ public class AquaCropSerializerTest {
 	public void projectNoOverride() throws IOException {
 		// serialize
 		AquaCropSerializer acs = new AquaCropSerializer(outputFilename, actualDir.getPath());
-		Project project = TestData.getProject();
+		Project project = SampleData.getProject();
 		acs.serialize(project);
 		
 		// read for comparison
