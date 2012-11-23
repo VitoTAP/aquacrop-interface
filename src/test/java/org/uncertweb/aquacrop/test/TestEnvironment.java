@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.junit.Ignore;
+
+@Ignore
 public class TestEnvironment {
 	
 	private Properties properties;

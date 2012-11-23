@@ -1,6 +1,7 @@
 package org.uncertweb.aquacrop.test;
 
 import org.joda.time.LocalDate;
+import org.junit.Ignore;
 import org.uncertweb.aquacrop.data.ClimateCharacteristics;
 import org.uncertweb.aquacrop.data.Co2Measurements;
 import org.uncertweb.aquacrop.data.CropCharacteristics;
@@ -11,6 +12,7 @@ import org.uncertweb.aquacrop.data.RainfallMeasurements;
 import org.uncertweb.aquacrop.data.SoilCharacteristics;
 import org.uncertweb.aquacrop.data.TemperatureMeasurements;
 
+@Ignore
 public class TestData {
 
 	public static Project getProject() {
