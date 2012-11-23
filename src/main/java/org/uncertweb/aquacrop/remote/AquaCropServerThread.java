@@ -47,7 +47,7 @@ public class AquaCropServerThread extends Thread {
 				try {
 					Output output = runner.run(project);					
 					oos.writeObject(output);
-					logger.info("Handled project '" + projectTitle + "' successfully.");					
+					logger.info("Handled project" + projectTitle + " successfully.");					
 				}
 				catch (AquaCropException e) {
 					logger.error("Caught exception when running AquaCrop.", e);
