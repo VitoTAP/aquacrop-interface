@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.uncertweb.aquacrop.data.Output;
 import org.uncertweb.aquacrop.data.Project;
-import org.uncertweb.io.StreamGobbler;
 
 /**
  * Okay...
@@ -101,27 +100,21 @@ public class AquaCropInterface {
 				// start aquacrop process
 				logger.debug("Starting process.");
 				Process process = runtime.exec((prefixCommand != null ? prefixCommand + " " : "") + runPath + "/ACsaV31plus/ACsaV31plus.exe");
-				
-				// consume streams
-				StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream());            
-				StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream());
-	            errorGobbler.start();
-	            outputGobbler.start();
 	            
 	            // wait for process
 	            // we could be waiting forever if there's been an error...
-	            logger.debug("Waiting for process to end..."); 
-//				boolean done = false;
-//				while (!done) {
-//					if (outputFile.exists()) {
-//						done = true;
-//	            		Thread.sleep(1000); // wait for write
-//						process.destroy(); // force required if error
-//					}
-//					else {
-//	            		Thread.sleep(500);
-//					}
-//				}
+	            logger.debug("Waiting for process to end...");
+				boolean done = false;
+				while (!done) {
+					if (outputFile.exists()) {
+						done = true;
+	            		Thread.sleep(2000); // wait for write
+						process.destroy(); // force required if error
+					}
+					else {
+	            		Thread.sleep(500);
+					}
+				}
 				process.waitFor();
 			}
 			catch (IOException e) {
