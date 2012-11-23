@@ -82,18 +82,27 @@ public class AquaCropInterface {
 		try {			
 			// this will create all data files
 			logger.debug("Serializing project.");
-			AquaCropSerializer serializer = new AquaCropSerializer(runId, runPath, basePathOverride);
+			AquaCropSerializer serializer = new AquaCropSerializer("project", runPath, basePathOverride);
 			serializer.serialize(project);
 
+			// move files
 			// PRO to ACsaV31plus/LIST/
 			// everything else to AquaCrop/DATA/
+			moveFile(runPath, "project.PRO", "ACsaV31plus/LIST/");
+			moveFile(runPath, "project.CLI", "AquaCrop/DATA/");
+			moveFile(runPath, "project.CRO", "AquaCrop/DATA/");
+			moveFile(runPath, "project.PLU", "AquaCrop/DATA/");
+			moveFile(runPath, "project.TMP", "AquaCrop/DATA/");
+			moveFile(runPath, "project.SOL", "AquaCrop/DATA/");
+			moveFile(runPath, "project.CO2", "AquaCrop/DATA/");
+			moveFile(runPath, "project.ETO", "AquaCrop/DATA/");  
 			
 			// get runtime
 			logger.debug("Getting runtime.");
 			Runtime runtime = Runtime.getRuntime();
 			
 			// for monitoring and reading
-			File outputFile = new File(runPath, "ACsaV31plus/OUTP/" + runId + "PRO.OUT");
+			File outputFile = new File(runPath, "ACsaV31plus/OUTP/projectPRO.OUT");
 
 			// run program
 			try {			
@@ -162,6 +171,11 @@ public class AquaCropInterface {
 		if (!basePathExists) {
 			throw new AquaCropException("Can't find AquaCrop executables at " + basePath + ".");
 		}
+	}
+	
+	private void moveFile(String path, String filename, String dest) {
+		File file = new File(new File(path), filename);
+	 	file.renameTo(new File(new File(path, dest), filename));
 	}
 
 	private static Output deserializeOutput(Reader reader) throws FileNotFoundException, IOException {

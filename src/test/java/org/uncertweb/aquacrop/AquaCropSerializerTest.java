@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
+import java.util.Scanner;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -103,6 +104,31 @@ public class AquaCropSerializerTest {
 		testFile("ETO");
 		testFile("SOL");
 		testFile("CRO");
+	}
+	
+	@Test
+	public void projectNoOverride() throws IOException {
+		// serialize
+		AquaCropSerializer acs = new AquaCropSerializer(outputFilename, actualDir.getPath());
+		Project project = TestData.getProject();
+		acs.serialize(project);
+		
+		// read for comparison
+		String expected = readFile(expectedDir, outputFilename + ".PRO");
+		String actual = readFile(actualDir, outputFilename + ".PRO");		
+		Scanner expectedScanner = new Scanner(expected);
+		Scanner actualScanner = new Scanner(actual);
+		
+		// compare with override
+		while (expectedScanner.hasNext()) {
+			String expectedLine = expectedScanner.nextLine();
+			String actualLine = actualScanner.nextLine();
+			if (!expectedLine.equals(actualLine)) {
+				// must be \ for windows
+				expectedLine = new File(actualDir, "AquaCrop" + File.separator + "DATA").getAbsolutePath() + "\\";
+			}
+			Assert.assertEquals(expectedLine, actualLine);
+		}
 	}
 
 	private String readFile(File dir, String filename) throws IOException {

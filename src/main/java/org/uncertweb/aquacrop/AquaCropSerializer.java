@@ -22,15 +22,20 @@ import org.uncertweb.aquacrop.data.TemperatureMeasurements;
 
 public class AquaCropSerializer {
 	
-	private File listDir;
-	private File dataDir;	
-	private File dataDirOverride;
+	private File outputDir;	
+	private File outputDirOverride;
 	private String outputFilename;	
 	
-	public AquaCropSerializer(String outputFilename, String basePath) {
-		File baseDir = new File(basePath);
-		this.listDir = new File(baseDir, "ACsaV31plus" + File.separator + "LIST");
-		this.dataDir = new File(baseDir, "AquaCrop" + File.separator + "DATA");
+	/**
+	 * If this constructor is used, an assumption is made that you will move the files to
+	 * AquaCrop/DATA in the <code>outputPath</code>, and is therefore the path is used in the PRO
+	 * file. A little bit confusing.
+	 * 
+	 * @param outputFilename
+	 * @param outputPath
+	 */
+	public AquaCropSerializer(String outputFilename, String outputPath) {
+		this.outputDir = new File(outputPath);
 		this.outputFilename = outputFilename;
 		
 		// init velocity		
@@ -41,16 +46,16 @@ public class AquaCropSerializer {
 		Velocity.init(props);
 	}
 	
-	public AquaCropSerializer(String filename, String basePath, String basePathOverride) {
-		this(filename, basePath);
-		if (basePathOverride != null) {
-			this.dataDirOverride = new File(new File(basePathOverride), "AquaCrop" + File.separator + "DATA");
+	public AquaCropSerializer(String outputFilename, String outputPath, String outputPathOverride) {
+		this(outputFilename, outputPath);
+		if (outputPathOverride != null) {
+			this.outputDirOverride = new File(outputPathOverride);
 		}
 	}
 
 	public void serialize(Project project) throws IOException {
 		// create file
-		FileWriter writer = new FileWriter(new File(listDir, outputFilename + ".PRO"));
+		FileWriter writer = new FileWriter(new File(outputDir, outputFilename + ".PRO"));
 		
 		// write other files first
 		serialize(project.getCropCharacteristics());
@@ -60,7 +65,7 @@ public class AquaCropSerializer {
 		// write
 		VelocityContext context = new VelocityContext();
 		context.put("aquaCropVersion", AquaCrop.VERSION);
-		context.put("basePath", (dataDirOverride != null ? dataDirOverride.getAbsolutePath() : dataDir.getAbsolutePath()));
+		context.put("basePath", (outputDirOverride != null ? outputDirOverride.getAbsolutePath() : new File(outputDir, "AquaCrop" + File.separator + "DATA").getAbsolutePath()));
 		context.put("filename", outputFilename);
 		context.put("project", project);
 		context.put("simPeriodStart", AquaCropUtilities.convertDateToInt(project.getSimulationPeriodStart()));
@@ -77,7 +82,7 @@ public class AquaCropSerializer {
 
 	public void serialize(RainfallMeasurements rainfallMeasurements) throws IOException {
 		// create file
-		FileWriter writer = new FileWriter(new File(dataDir, outputFilename + ".PLU"));
+		FileWriter writer = new FileWriter(new File(outputDir, outputFilename + ".PLU"));
 		
 		// write
 		VelocityContext context = new VelocityContext();
@@ -91,7 +96,7 @@ public class AquaCropSerializer {
 
 	public void serialize(ClimateCharacteristics cliCharacteristics) throws IOException {
 		// create file
-		FileWriter writer = new FileWriter(new File(dataDir, outputFilename + ".CLI"));
+		FileWriter writer = new FileWriter(new File(outputDir, outputFilename + ".CLI"));
 		
 		// write
 		VelocityContext context = new VelocityContext();
@@ -112,7 +117,7 @@ public class AquaCropSerializer {
 	
 	public void serialize(TemperatureMeasurements tmpMeasurements) throws IOException {
 		// create file
-		FileWriter writer = new FileWriter(new File(dataDir, outputFilename + ".TMP"));
+		FileWriter writer = new FileWriter(new File(outputDir, outputFilename + ".TMP"));
 		
 		// write
 		VelocityContext context = new VelocityContext();
@@ -126,7 +131,7 @@ public class AquaCropSerializer {
 
 	public void serialize(SoilCharacteristics soilCharacteristics) throws IOException {
 		// create file
-		FileWriter writer = new FileWriter(new File(dataDir, outputFilename + ".SOL"));
+		FileWriter writer = new FileWriter(new File(outputDir, outputFilename + ".SOL"));
 		
 		// write
 		VelocityContext context = new VelocityContext();
@@ -141,7 +146,7 @@ public class AquaCropSerializer {
 
 	public void serialize(Co2Measurements co2Measurements) throws IOException {
 		// create file
-		FileWriter writer = new FileWriter(new File(dataDir, outputFilename + ".CO2"));
+		FileWriter writer = new FileWriter(new File(outputDir, outputFilename + ".CO2"));
 		
 		// write
 		VelocityContext context = new VelocityContext();
@@ -155,7 +160,7 @@ public class AquaCropSerializer {
 	
 	public void serialize(CropCharacteristics cropCharacteristics) throws IOException {
 		// create file
-		FileWriter writer = new FileWriter(new File(dataDir, outputFilename + ".CRO"));
+		FileWriter writer = new FileWriter(new File(outputDir, outputFilename + ".CRO"));
 		
 		// write
 		VelocityContext context = new VelocityContext();
@@ -172,7 +177,7 @@ public class AquaCropSerializer {
 	
 	public void serialize(EvapotranspirationMeasurements etMeasurements) throws IOException {
 		// create file
-		FileWriter writer = new FileWriter(new File(dataDir, outputFilename + ".ETO"));
+		FileWriter writer = new FileWriter(new File(outputDir, outputFilename + ".ETO"));
 		
 		// write
 		VelocityContext context = new VelocityContext();
