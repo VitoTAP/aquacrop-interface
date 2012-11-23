@@ -3,6 +3,7 @@ package org.uncertweb.aquacrop;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
@@ -28,13 +29,14 @@ public class AquaCropSerializerTest {
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
 	
-	private File expectedDir = new File("src/test/resources/expected");
+	private File expectedDir;
 	private File actualDir;	
 	private String outputFilename = "project";	
 	private AquaCropSerializer serializer;
 	
 	@Before
-	public void setUp() throws IOException {
+	public void setUp() throws IOException, URISyntaxException {
+		expectedDir = new File(this.getClass().getClassLoader().getResource("expected").toURI());
 		actualDir = folder.newFolder("actual");
 		serializer = new AquaCropSerializer(outputFilename, actualDir.getPath(), "C:\\FAO\\AquaCrop\\DATA\\");
 	}
