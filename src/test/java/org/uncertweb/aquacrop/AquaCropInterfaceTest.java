@@ -18,6 +18,7 @@ public class AquaCropInterfaceTest {
     public ExpectedException exception = ExpectedException.none();
 
 	private AquaCropInterface iface;
+	private static Output normalProjectOutput;
 	
 	@Before
 	public void before() {
@@ -151,8 +152,11 @@ public class AquaCropInterfaceTest {
 	}
 	
 	private Output runNormalProject() throws AquaCropException {
-		Project project = TestData.getProject();
-		return iface.run(project);
+		if (normalProjectOutput == null) {
+			Project project = TestData.getProject();
+			normalProjectOutput = iface.run(project);
+		}
+		return normalProjectOutput;
 	}
 	
 }

@@ -23,13 +23,13 @@ import org.uncertweb.aquacrop.data.TemperatureMeasurements;
 public class AquaCropSerializer {
 	
 	private File outputDir;	
-	private File outputDirOverride;
+	private String outputPathOverride;
 	private String outputFilename;	
 	
 	/**
-	 * If this constructor is used, an assumption is made that you will move the files to
-	 * AquaCrop/DATA in the <code>outputPath</code>, and is therefore the path is used in the PRO
-	 * file. A little bit confusing.
+	 * If this constructor is used, an assumption is made that you will move the files to 
+	 * AquaCrop/DATA in the <code>outputPath</code>, and is therefore the path is used in
+	 * the PRO file. A little bit confusing.
 	 * 
 	 * @param outputFilename
 	 * @param outputPath
@@ -49,7 +49,7 @@ public class AquaCropSerializer {
 	public AquaCropSerializer(String outputFilename, String outputPath, String outputPathOverride) {
 		this(outputFilename, outputPath);
 		if (outputPathOverride != null) {
-			this.outputDirOverride = new File(outputPathOverride);
+			this.outputPathOverride = outputPathOverride;
 		}
 	}
 
@@ -65,7 +65,7 @@ public class AquaCropSerializer {
 		// write
 		VelocityContext context = new VelocityContext();
 		context.put("aquaCropVersion", AquaCrop.VERSION);
-		context.put("basePath", (outputDirOverride != null ? outputDirOverride.getAbsolutePath() : new File(outputDir, "AquaCrop" + File.separator + "DATA").getAbsolutePath()));
+		context.put("basePath", (outputPathOverride != null ? outputPathOverride : new File(outputDir, "AquaCrop\\DATA").getAbsolutePath()));
 		context.put("filename", outputFilename);
 		context.put("project", project);
 		context.put("simPeriodStart", AquaCropUtilities.convertDateToInt(project.getSimulationPeriodStart()));

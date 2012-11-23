@@ -38,7 +38,7 @@ public class AquaCropSerializerTest {
 	public void setUp() throws IOException, URISyntaxException {
 		expectedDir = new File(this.getClass().getClassLoader().getResource("expected").toURI());
 		actualDir = folder.newFolder("actual");
-		serializer = new AquaCropSerializer(outputFilename, actualDir.getPath(), "C:\\FAO\\AquaCrop\\DATA\\");
+		serializer = new AquaCropSerializer(outputFilename, actualDir.getPath(), "C:\\FAO\\AquaCrop\\DATA");
 	}
 
 	@Test

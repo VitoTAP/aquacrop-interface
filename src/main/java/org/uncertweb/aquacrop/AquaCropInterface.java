@@ -81,7 +81,10 @@ public class AquaCropInterface {
 		// serialize project and run
 		try {			
 			// this will create all data files
-			logger.debug("Serializing project.");
+			if (basePathOverride != null) {
+				basePathOverride = basePathOverride + "\\" + runDir.getName() + "\\AquaCrop\\DATA";
+			}
+			logger.debug("Serializing project...");
 			AquaCropSerializer serializer = new AquaCropSerializer("project", runPath, basePathOverride);
 			serializer.serialize(project);
 
@@ -98,7 +101,7 @@ public class AquaCropInterface {
 			moveFile(runPath, "project.ETO", "AquaCrop/DATA/");  
 			
 			// get runtime
-			logger.debug("Getting runtime.");
+			logger.debug("Getting runtime...");
 			Runtime runtime = Runtime.getRuntime();
 			
 			// for monitoring and reading
@@ -107,11 +110,11 @@ public class AquaCropInterface {
 			// run program
 			try {			
 				// start aquacrop process
-				logger.debug("Starting process.");
+				logger.debug("Starting process...");
 				Process process = runtime.exec((prefixCommand != null ? prefixCommand + " " : "") + runPath + "/ACsaV31plus/ACsaV31plus.exe");
-	            
+				
 	            // wait for process
-	            // we could be waiting forever if there's been an error...
+	            // we could be waiting forever if no output is produced
 	            logger.debug("Waiting for process to end...");
 				boolean done = false;
 				while (!done) {
