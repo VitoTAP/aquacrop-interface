@@ -100,7 +100,8 @@ public class AquaCropServerTest {
 		// create task list
 		Callable<List<Output>> validTask = new ProjectSender(STRESS_REQUESTS);
 		Callable<List<Output>> invalidTask = new InvalidProjectSender(STRESS_REQUESTS);
-		List<Callable<List<Output>>> tasks = Collections.nCopies(STRESS_THREADS / 2, validTask);
+		List<Callable<List<Output>>> tasks = new ArrayList<Callable<List<Output>>>();
+		tasks.addAll(Collections.nCopies(STRESS_THREADS / 2, validTask));
 		tasks.addAll(Collections.nCopies(STRESS_THREADS / 2, invalidTask));
 		Collections.shuffle(tasks);
 
