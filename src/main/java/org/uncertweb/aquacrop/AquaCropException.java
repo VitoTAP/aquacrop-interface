@@ -2,7 +2,7 @@ package org.uncertweb.aquacrop;
 
 public class AquaCropException extends Exception {
 	
-	private static final long serialVersionUID = -4813758833699835948L;
+	private static final long serialVersionUID = -7162388318983129934L;
 
 	public AquaCropException() {
 		super();

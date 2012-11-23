@@ -41,12 +41,13 @@ public class AquaCropServerThread extends Thread {
 			// parse object
 			try {
 				Project project = (Project) ois.readObject();
-				logger.info("Received project" + (project.getTitle() != null ?  " '" + project.getTitle() + "'" : "") + ".");
+				String projectTitle = (project.getTitle() != null ?  " '" + project.getTitle() + "'" : "");
+				logger.info("Received project" + projectTitle + ".");
 
 				try {
 					Output output = runner.run(project);					
 					oos.writeObject(output);
-					logger.info("Handled request successfully.");					
+					logger.info("Handled project '" + projectTitle + "' successfully.");					
 				}
 				catch (AquaCropException e) {
 					logger.error("Caught exception when running AquaCrop.", e);
@@ -55,17 +56,17 @@ public class AquaCropServerThread extends Thread {
 			}
 			catch (ClassNotFoundException e) {
 				logger.error("Couldn't find class for parsed object.", e);
-				oos.writeObject(new AquaCropRemoteException("Couldn't read client object."));
+				oos.writeObject(new AquaCropRemoteException("Couldn't read client object.", e));
 			}
 			catch (RuntimeException e) {
 				// safety catch all
 				// this is what will happen if any required inputs aren't set (e.g. dates)
 				logger.error("Caught runtime exception during AquaCrop run stage.", e);				
-				oos.writeObject(new AquaCropRemoteException("Error during AquaCrop run stage. Are all required inputs set?"));
+				oos.writeObject(new AquaCropRemoteException("Error during AquaCrop run stage. Are all required inputs set?", e));
 			}
 		}
 		catch (IOException e) {
-			logger.error("Couldn't handle input/output streams: " + e.getMessage());
+			logger.error("Couldn't handle input/output streams.", e);
 		}
 		finally {
 			// close streams
