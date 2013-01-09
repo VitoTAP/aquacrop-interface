@@ -79,6 +79,7 @@ public class AquaCropInterface {
 		}
 
 		// serialize project and run
+		Output output = null;
 		try {			
 			// this will create all data files
 			if (basePathOverride != null) {
@@ -139,7 +140,7 @@ public class AquaCropInterface {
 			// parse output
 			logger.debug("Process finished, parsing output...");
 			FileReader reader = new FileReader(outputFile);
-			Output output = AquaCropInterface.deserializeOutput(reader);
+			output = AquaCropInterface.deserializeOutput(reader);
 			reader.close();
 			
 			if (output == null) {
@@ -150,7 +151,7 @@ public class AquaCropInterface {
 			else {
 				logger.debug("Parsed output successfully.");
 				return output;
-			}				
+			}
 		}
 		catch (IOException e) {
 			// will be from creating the project file, or reading the output file
@@ -160,7 +161,10 @@ public class AquaCropInterface {
 		finally {
 			// clean up input files
 			try {
-				FileUtils.deleteDirectory(runDir);
+				// helps debugging
+				if (output != null) {
+					FileUtils.deleteDirectory(runDir);
+				}
 			}
 			catch (IOException e) {
 				logger.warn("Couldn't remove output directory.", e);
