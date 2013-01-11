@@ -1,11 +1,8 @@
 package org.uncertweb.aquacrop;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -79,7 +76,6 @@ public class AquaCropInterface {
 		}
 
 		// serialize project and run
-		Output output = null;
 		try {			
 			// this will create all data files
 			if (basePathOverride != null) {
@@ -122,6 +118,8 @@ public class AquaCropInterface {
 					if (outputFile.exists()) {
 						done = true;
 	            		Thread.sleep(2000); // wait for write
+	            		// potential for exit command here
+	            		// xwd -display :1 -root -out image.xwd
 						process.destroy(); // force required if error
 					}
 					else {
@@ -140,7 +138,7 @@ public class AquaCropInterface {
 			// parse output
 			logger.debug("Process finished, parsing output...");
 			FileReader reader = new FileReader(outputFile);
-			output = AquaCropInterface.deserializeOutput(reader);
+			Output output = new AquaCropDeserializer().deserialize(reader);
 			reader.close();
 			
 			if (output == null) {
@@ -161,10 +159,7 @@ public class AquaCropInterface {
 		finally {
 			// clean up input files
 			try {
-				// helps debugging
-				if (output != null) {
-					FileUtils.deleteDirectory(runDir);
-				}
+				FileUtils.deleteDirectory(runDir);
 			}
 			catch (IOException e) {
 				logger.warn("Couldn't remove output directory.", e);
@@ -183,48 +178,6 @@ public class AquaCropInterface {
 	private void moveFile(String path, String filename, String dest) {
 		File file = new File(new File(path), filename);
 	 	file.renameTo(new File(new File(path, dest), filename));
-	}
-
-	private static Output deserializeOutput(Reader reader) throws FileNotFoundException, IOException {
-		BufferedReader bufReader = new BufferedReader(reader);
-		bufReader.readLine(); // skip first line containing aquacrop version, creation date
-		bufReader.readLine(); // skip following empty line
-		bufReader.readLine(); // skip column headings
-		bufReader.readLine(); // skip column headings units
-
-		String line;
-		while ((line = bufReader.readLine()) != null && line.length() > 0) { // could be blank line at bottom
-			// split on whitespace
-			String[] tokens = line.trim().split("\\s+");
-
-			// totals is all we want
-			if (tokens[0].startsWith("Tot")) {
-				// parse results
-				double rain = Double.parseDouble(tokens[4]);
-				double eto = Double.parseDouble(tokens[5]);
-				double gdd = Double.parseDouble(tokens[6]);
-				double co2 = Double.parseDouble(tokens[7]);
-				double irri = Double.parseDouble(tokens[8]);
-				double infilt = Double.parseDouble(tokens[9]);
-				double e = Double.parseDouble(tokens[10]);
-				double eEx = Double.parseDouble(tokens[11]);
-				double tr = Double.parseDouble(tokens[12]);
-				double trTrx = Double.parseDouble(tokens[13]);
-				double drain = Double.parseDouble(tokens[14]);
-				double bioMass = Double.parseDouble(tokens[15]);
-				double brW = Double.parseDouble(tokens[16]);
-				double brWsf = Double.parseDouble(tokens[17]);
-				double wPetB = Double.parseDouble(tokens[18]);
-				double hi = Double.parseDouble(tokens[19]);
-				double yield = Double.parseDouble(tokens[20]);
-				double wPetY = Double.parseDouble(tokens[21]);
-
-				// and return
-				return new Output(rain, eto, gdd, co2, irri, infilt, e, eEx, tr, trTrx, drain, bioMass, brW, brWsf, wPetB, hi, yield, wPetY);
-			}
-		}
-		
-		return null;
 	}
 
 }
