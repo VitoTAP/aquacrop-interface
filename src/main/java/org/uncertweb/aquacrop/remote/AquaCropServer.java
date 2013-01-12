@@ -87,7 +87,7 @@ public class AquaCropServer {
 				basePathOverride = args[3];
 			}
 			if (args.length > 4) {
-				keepFiles = Boolean.parseBoolean(args[2]);
+				keepFiles = Boolean.parseBoolean(args[4]);
 			}
 			logger.info("Starting server with base path '" + basePath + "' and " + (prefixCommand != null ? "prefix command '" + prefixCommand + "'." : "no prefix command."));
 			logger.info((keepFiles ? "Keeping" : "Removing") + " project files after AquaCrop runs.");
