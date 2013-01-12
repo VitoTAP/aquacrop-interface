@@ -23,7 +23,7 @@ The dependency for the interface can then be added.
   <dependency>
     <groupId>org.uncertweb</groupId>
     <artifactId>aquacrop-interface</artifactId>
-    <version>0.5</version>
+    <version>0.5.3</version>
   </dependency>
 </dependencies>
 ```
