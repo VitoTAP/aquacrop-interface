@@ -23,7 +23,7 @@ public class AquaCropInterfaceTest {
 	@Before
 	public void before() {
 		TestEnvironment env = TestEnvironment.getInstance();
-		iface = new AquaCropInterface(env.getBasePath(), env.getPrefixCommand(), env.getBasePathOverride());
+		iface = new AquaCropInterface(env.getBasePath(), env.getPrefixCommand(), env.getBasePathOverride(), false);
 	}
 	
 	@Test

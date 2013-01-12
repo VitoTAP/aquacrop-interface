@@ -43,7 +43,7 @@ public class AquaCropServerTest {
 			@Override
 			public void run() {
 				TestEnvironment env = TestEnvironment.getInstance();
-				server = new AquaCropServer(port, env.getBasePath(), env.getPrefixCommand(), env.getBasePathOverride());
+				server = new AquaCropServer(port, env.getBasePath(), env.getPrefixCommand(), env.getBasePathOverride(), false);
 				try {
 					server.start();
 				}
