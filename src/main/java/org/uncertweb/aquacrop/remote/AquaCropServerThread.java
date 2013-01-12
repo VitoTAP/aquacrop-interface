@@ -19,13 +19,15 @@ public class AquaCropServerThread extends Thread {
 	private String aquaCropBase;
 	private String aquaCropPrefix;
 	private String aquaCropBaseOverride;
+	private boolean aquaCropKeepFiles;
 
-	public AquaCropServerThread(Socket socket, String aquaCropBase, String aquaCropPrefix, String aquaCropBaseOverride) {
+	public AquaCropServerThread(Socket socket, String aquaCropBase, String aquaCropPrefix, String aquaCropBaseOverride, boolean aquaCropKeepFiles) {
 		super("AquaCropServerThread");
 		this.socket = socket;
 		this.aquaCropBase = aquaCropBase;
 		this.aquaCropPrefix = aquaCropPrefix;
 		this.aquaCropBaseOverride = aquaCropBaseOverride;
+		this.aquaCropKeepFiles = aquaCropKeepFiles;
 	}
 
 	public void run() {
@@ -33,7 +35,7 @@ public class AquaCropServerThread extends Thread {
 		ObjectOutputStream oos = null;
 		
 		try {
-			AquaCropInterface runner = new AquaCropInterface(aquaCropBase, aquaCropPrefix, aquaCropBaseOverride);
+			AquaCropInterface runner = new AquaCropInterface(aquaCropBase, aquaCropPrefix, aquaCropBaseOverride, aquaCropKeepFiles);
 
 			ois = new ObjectInputStream(socket.getInputStream());
 			oos = new ObjectOutputStream(socket.getOutputStream());

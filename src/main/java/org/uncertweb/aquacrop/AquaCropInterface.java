@@ -39,22 +39,18 @@ public class AquaCropInterface {
 	private String basePath;
 	private String prefixCommand;
 	private String basePathOverride;
+	
+	private boolean keepFiles;
 
-	public AquaCropInterface(String basePath) {
-		this.basePath = basePath;
+	public AquaCropInterface(String basePath, boolean keepFiles) {
+		this(basePath, null, null, keepFiles);
 	}
-
-	/**
-	 * 
-	 * 
-	 * 
-	 * @param basePath
-	 * @param prefixCommand
-	 */
-	public AquaCropInterface(String basePath, String prefixCommand, String basePathOverride) {
-		this(basePath);
+	
+	public AquaCropInterface(String basePath, String prefixCommand, String basePathOverride, boolean keepFiles) {
+		this.basePath = basePath;
 		this.prefixCommand = prefixCommand;
 		this.basePathOverride = basePathOverride;
+		this.keepFiles = keepFiles;
 	}
 
 	public Output run(Project project) throws AquaCropException {
@@ -88,14 +84,14 @@ public class AquaCropInterface {
 			// move files
 			// PRO to ACsaV31plus/LIST/
 			// everything else to AquaCrop/DATA/
-			moveFile(runPath, "project.PRO", "ACsaV31plus/LIST/");
-			moveFile(runPath, "project.CLI", "AquaCrop/DATA/");
-			moveFile(runPath, "project.CRO", "AquaCrop/DATA/");
-			moveFile(runPath, "project.PLU", "AquaCrop/DATA/");
-			moveFile(runPath, "project.TMP", "AquaCrop/DATA/");
-			moveFile(runPath, "project.SOL", "AquaCrop/DATA/");
-			moveFile(runPath, "project.CO2", "AquaCrop/DATA/");
-			moveFile(runPath, "project.ETO", "AquaCrop/DATA/");  
+			moveFileTo(runPath, "project.PRO", "ACsaV31plus/LIST/");
+			moveFileTo(runPath, "project.CLI", "AquaCrop/DATA/");
+			moveFileTo(runPath, "project.CRO", "AquaCrop/DATA/");
+			moveFileTo(runPath, "project.PLU", "AquaCrop/DATA/");
+			moveFileTo(runPath, "project.TMP", "AquaCrop/DATA/");
+			moveFileTo(runPath, "project.SOL", "AquaCrop/DATA/");
+			moveFileTo(runPath, "project.CO2", "AquaCrop/DATA/");
+			moveFileTo(runPath, "project.ETO", "AquaCrop/DATA/");  
 			
 			// get runtime
 			logger.debug("Getting runtime...");
@@ -159,7 +155,21 @@ public class AquaCropInterface {
 		finally {
 			// clean up input files
 			try {
-				FileUtils.deleteDirectory(runDir);
+				if (keepFiles) {
+					moveFileFrom(runPath, "project.PRO", "ACsaV31plus/LIST/");
+					moveFileFrom(runPath, "project.CLI", "AquaCrop/DATA/");
+					moveFileFrom(runPath, "project.CRO", "AquaCrop/DATA/");
+					moveFileFrom(runPath, "project.PLU", "AquaCrop/DATA/");
+					moveFileFrom(runPath, "project.TMP", "AquaCrop/DATA/");
+					moveFileFrom(runPath, "project.SOL", "AquaCrop/DATA/");
+					moveFileFrom(runPath, "project.CO2", "AquaCrop/DATA/");
+					moveFileFrom(runPath, "project.ETO", "AquaCrop/DATA/"); 
+					FileUtils.deleteDirectory(new File(runDir, "AquaCrop"));
+					FileUtils.deleteDirectory(new File(runDir, "ACsaV31plus"));
+				}
+				else {
+					FileUtils.deleteDirectory(runDir);
+				}
 			}
 			catch (IOException e) {
 				logger.warn("Couldn't remove output directory.", e);
@@ -175,7 +185,12 @@ public class AquaCropInterface {
 		}
 	}
 	
-	private void moveFile(String path, String filename, String dest) {
+	private void moveFileFrom(String path, String filename, String source) {
+		File file = new File(new File(path, source), filename);
+	 	file.renameTo(new File(new File(path), filename));
+	}
+	
+	private void moveFileTo(String path, String filename, String dest) {
 		File file = new File(new File(path), filename);
 	 	file.renameTo(new File(new File(path, dest), filename));
 	}
