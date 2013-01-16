@@ -157,6 +157,7 @@ public class AquaCropInterface {
 			// clean up input files
 			try {
 				if (keepFiles) {
+					moveFileFrom(runPath, "projectPRO.OUT", "ACsaV31plus/OUTP/");
 					moveFileFrom(runPath, "project.PRO", "ACsaV31plus/LIST/");
 					moveFileFrom(runPath, "project.CLI", "AquaCrop/DATA/");
 					moveFileFrom(runPath, "project.CRO", "AquaCrop/DATA/");
