@@ -6,9 +6,16 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * 
@@ -18,7 +25,7 @@ import org.slf4j.LoggerFactory;
 public class AquaCropServer {
 
 	private static final Logger logger = LoggerFactory.getLogger(AquaCropServer.class);
-	
+
 	private int port;
 	private String basePath;
 	private String prefixCommand;
@@ -66,69 +73,88 @@ public class AquaCropServer {
 		}
 	}
 
+	@SuppressWarnings("static-access")
 	public static void main(String[] args) {
-		if (args.length > 1) {			
-			// parse arguments
-			int port = Integer.parseInt(args[0]);
-			String basePath = args[1];
-			String prefixCommand = null;
-			boolean keepFiles = false;
-			if (args.length > 2) {
-				String lcArgs = args[2].toLowerCase();
-				if (lcArgs.equals("true") || lcArgs.equals("false")) {
-					keepFiles = Boolean.parseBoolean(args[2]);
-				}
-				else {
-					prefixCommand = args[2];
-				}
-			}
-			String basePathOverride = null;
-			if (args.length > 3) {
-				basePathOverride = args[3];
-			}
-			if (args.length > 4) {
-				keepFiles = Boolean.parseBoolean(args[4]);
-			}
-			logger.info("Starting server with base path '" + basePath + "' and " + (prefixCommand != null ? "prefix command '" + prefixCommand + "'." : "no prefix command."));
-			logger.info((keepFiles ? "Keeping" : "Removing") + " project files after AquaCrop runs.");
-			if (basePathOverride != null) {
-				logger.info("Using " + basePathOverride + " as path override.");
-			}
+		// create command line options
+		Options options = new Options();
 
-			// create and start		
-			final AquaCropServer server = new AquaCropServer(port, basePath, prefixCommand, basePathOverride, keepFiles);
-			
-			// hook to shutdown gracefully
-			Runtime.getRuntime().addShutdownHook(new Thread() {
-				@Override
-				public void run() {
-					try {
-						server.stop();
-					}
-					catch (IOException e) {
-						logger.warn("Couldn't shutdown server gracefully, sockets may still be open.");
-					}
-				}
-			});
-			
-			try {
-				// start
-				server.start();
-			}
-			catch (IOException e) {
-				System.err.println("Could not listen on port " + port + ", is it already in use?");
-			}
-		}
-		else {
-			AquaCropServer.printUsage();
-		}
-	}
+		// create options
+		Option portOpt = OptionBuilder.withArgName("port")
+				.isRequired()
+				.hasArg()
+				.withDescription("the port for the server to listen on")
+				.create("port");
+		Option pathOpt = OptionBuilder.withArgName("path")
+				.isRequired()
+				.hasArg()
+				.withDescription("the path to where AquaCrop and ACsaV31plus directories can be found")
+				.create("path");
+		Option pathOverrideOpt = OptionBuilder.withArgName("override")
+				.hasArg()
+				.withDescription("the path where the executable should look for the files")
+				.create("override");
+		Option prefixOpt = OptionBuilder.withArgName("prefix")
+				.hasArg()
+				.withDescription("the prefix command for running the executable")
+				.create("prefix");
+		Option keepFilesOpt = new Option("keep", "keep generated files after run");
 
-	private static void printUsage() {
-		System.out.println("Usage: aquacrop-interface PORT BASE [PREFIX]");
-		System.out.println(" PORT the port you wish the server to listen on");
-		System.out.println(" BASE the path to where AquaCrop and ACsaV31plus directories can be found");
-		System.out.println(" PREFIX the prefix command for running the executables");
+		// add them
+		options.addOption(portOpt);
+		options.addOption(pathOpt);
+		options.addOption(pathOverrideOpt);
+		options.addOption(prefixOpt);
+		options.addOption(keepFilesOpt);
+
+		// create the parser
+		CommandLineParser parser = new GnuParser();
+		CommandLine line = null;
+		try {
+			line = parser.parse(options, args);
+		}
+		catch (ParseException exp) {
+			System.err.println("Couldn't start AquaCrop server. " + exp.getMessage());
+			HelpFormatter formatter = new HelpFormatter();
+			formatter.printHelp("aquacrop-interface", options, true);
+			System.exit(0);
+		}
+
+		// get args
+		int port = Integer.parseInt(line.getOptionValue("port"));
+		String path = line.getOptionValue("path");
+		String override = line.getOptionValue("override");
+		String prefix = line.getOptionValue("prefix");
+		boolean keepFiles = line.hasOption("keep");
+
+		logger.info("Starting server with base path '" + path + "' and " + (prefix != null ? "prefix command '" + prefix + "'." : "no prefix command."));
+		logger.info((keepFiles ? "Keeping" : "Removing") + " project files after AquaCrop runs.");
+		if (override != null) {
+			logger.info("Using " + override + " as path override.");
+		}
+
+		// create and start		
+		final AquaCropServer server = new AquaCropServer(port, path, prefix, override, keepFiles);
+
+		// hook to shutdown gracefully
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				try {
+					server.stop();
+				}
+				catch (IOException e) {
+					logger.warn("Couldn't shutdown server gracefully, sockets may still be open.");
+				}
+			}
+		});
+
+		try {
+			// start
+			server.start();
+		}
+		catch (IOException e) {
+			System.err.println("Could not listen on port " + port + ", is it already in use?");
+		}
 	}
 
 }

@@ -23,7 +23,7 @@ The dependency for the interface can then be added.
   <dependency>
     <groupId>org.uncertweb</groupId>
     <artifactId>aquacrop-interface</artifactId>
-    <version>0.5.3</version>
+    <version>0.5.5</version>
   </dependency>
 </dependencies>
 ```
@@ -42,7 +42,7 @@ Both should be installed to the same base directory (e.g. C:\FAO).
 Project project = SampleData.getProject();
 
 // Create interface using base directory path
-AquaCropInterface iface = AquaCropInterface("C:\\FAO"");
+AquaCropInterface iface = AquaCropInterface("C:\\FAO");
 
 // Run with project
 try {
@@ -104,3 +104,7 @@ If you wish to build the project from source, rename aquacrop.sample.properties 
 ```console
 $ mvn clean package
 ```
+
+### Limitations
+
+The AquaCrop plug-in program only provides error messages in a modal dialog box, thus cannot be read by the interface. These messages aren't very informative anyway, take for example my favourite - "Floating point divison by zero".
