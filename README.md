@@ -32,7 +32,7 @@ The dependency for the interface can then be added.
 
 Unless you are using the interface to connect to a remote instance, you will need to install AquaCrop on either your local machine or remote server. This will require installation of both [AquaCrop 3.1](http://) and the [AquaCrop 3.1 plug-in program](http://). Both should be installed to the same base directory (e.g. C:\FAO), and make a note of the path to this directory.
 
-## Interface usage
+## Client
 
 Interfacing with either a local or remote AquaCrop instance requires to you build a `Project` object, which contains all of the parameters for an AquaCrop project - including climate, crop, and soil characteristics. The first step is to create the climate characteristics data. In this example, we will use a daily frequency for all measurements, and a start date of 1st October 2012:
 
