@@ -30,7 +30,7 @@ The dependency for the interface can then be added.
 
 ### AquaCrop setup
 
-Unless you are using the interface to connect to a remote instance, you will need to install AquaCrop on either your local machine or remote server. This will require installation of both [AquaCrop 3.1][http://] and the [AquaCrop 3.1 plug-in program][http://]. Both should be installed to the same base directory (e.g. C:\FAO), and make a note of the path to this directory.
+Unless you are using the interface to connect to a remote instance, you will need to install AquaCrop on either your local machine or remote server. This will require installation of both [AquaCrop 3.1](http://) and the [AquaCrop 3.1 plug-in program](http://). Both should be installed to the same base directory (e.g. C:\FAO), and make a note of the path to this directory.
 
 ## Interface usage
 
@@ -145,9 +145,9 @@ Parameters can be set by passing command line arguments:
 
 ## Linux
 
-AquaCrop can be executed in Linux using [WINE][http://www.winehq.org/] and some extra parameters. As AquaCrop requires a Windows path to locate the project files, in addition to the path, we need to set the override parameter when using WINE. For example, an override of `z:\home\username\aquacrop\FAO` can typically be used for the path `/home/username/aquacrop/FAO`.
+AquaCrop can be executed in Linux using [WINE](http://www.winehq.org/) and some extra parameters. As AquaCrop requires a Windows path to locate the project files, in addition to the path, we need to set the override parameter when using WINE. For example, an override of `z:\home\username\aquacrop\FAO` can typically be used for the path `/home/username/aquacrop/FAO`.
 
-Even though the AquaCrop plug-in program has no interface, it still creates a window (and dialog boxes if there are errors). On a headless machine, this will prevent WINE/AquaCrop from running unless an X11 server exists. As we don't have a physical screen, we can instead use [Xvfb][http://en.wikipedia.org/wiki/Xvfb] to perform all graphical operations in memory. The xvfb-run script creates an Xvfb instance, runs the a given program, and destroys the Xvfb instance once the program has terminated. To use xvfb-run, simply set a prefix command of `xvfb-run wine`. However, as creating and destroying Xvfb instances is slow, it may be more efficient to create a single Xvfb instance which can then be used for all AquaCrop runs. An Xvfb instance can be created from the terminal:
+Even though the AquaCrop plug-in program has no interface, it still creates a window (and dialog boxes if there are errors). On a headless machine, this will prevent WINE/AquaCrop from running unless an X11 server exists. As we don't have a physical screen, we can instead use [Xvfb](http://en.wikipedia.org/wiki/Xvfb) to perform all graphical operations in memory. The xvfb-run script creates an Xvfb instance, runs the a given program, and destroys the Xvfb instance once the program has terminated. To use xvfb-run, simply set a prefix command of `xvfb-run wine`. However, as creating and destroying Xvfb instances is slow, it may be more efficient to create a single Xvfb instance which can then be used for all AquaCrop runs. An Xvfb instance can be created from the terminal:
 
 ```console
 $ Xvfb :1 -screen 0 800x600x24 &
