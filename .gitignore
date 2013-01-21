@@ -2,5 +2,5 @@
 .project
 .classpath
 .settings
-src/test/java/org/uncertweb/aquacrop/AquaCropTest.java
+src/test/resources/aquacrop.properties
 target
