@@ -133,7 +133,7 @@ catch (AquaCropException e) {
 Running an AquaCrop server enables clients to remotely send projects to be run. The server requires the same basic AquaCrop setup as the client, and once setup can be started from the command line:
 
 ```console
-$ java -jar aquacrop-interface-0.5.5-with-dependencies.jar -port 44445 -path="C:\FAO"
+$ java -jar aquacrop-interface-0.5.5-with-dependencies.jar -port=44445 -path="C:\FAO"
 ```
 
 Parameters can be set by passing command line arguments:
