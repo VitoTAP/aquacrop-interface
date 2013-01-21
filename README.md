@@ -30,7 +30,7 @@ The dependency for the interface can then be added.
 
 ### AquaCrop setup
 
-Unless you are using the interface to connect to a remote instance, you will need to install AquaCrop on either your local machine or remote server. This will require installation of both [AquaCrop 3.1](http://) and the [AquaCrop 3.1 plug-in program](http://). Both should be installed to the same base directory (e.g. C:\FAO), and make a note of the path to this directory.
+Unless you are using the interface to connect to a remote instance, you will need to install AquaCrop on either your local machine or remote server. This will require installation of both [AquaCrop 3.1](http://) and the [AquaCrop 3.1 plug-in program](http://). Both should be installed to the same base directory (e.g. `C:\FAO`), and make a note of the path to this directory.
 
 ## Client
 
