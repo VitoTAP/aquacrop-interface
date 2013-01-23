@@ -30,7 +30,7 @@ The dependency for the interface can then be added.
 
 ### AquaCrop setup
 
-Unless you are using the interface to connect to a remote instance, you will need to install AquaCrop on either your local machine or remote server. This will require installation of both [AquaCrop 3.1](http://) and the [AquaCrop 3.1 plug-in program](http://). Both should be installed to the same base directory (e.g. `C:\FAO`), and make a note of the path to this directory.
+Unless you are using the interface to connect to a remote instance, you will need to install AquaCrop on either your local machine or remote server. This will require installation of both [AquaCrop 3.1](http://www.fao.org/nr/water/jsp/downloadAquacrop/index.htm?dUrl=http://www.fao.org/nr/water/docs/AquaCropV31.zip) and the [AquaCrop 3.1 plug-in program](http://www.fao.org/nr/water/jsp/downloadAquacrop/index.htm?dUrl=http://www.fao.org/nr/water/docs/ACsaV31plus.zip). Both should be installed to the same base directory (e.g. `C:\FAO`), and make a note of the path to this directory.
 
 ## Client
 
@@ -86,7 +86,7 @@ Alternatively, a sample project is available to test your setup:
 Project project = SampleData.getProject();
 ```
 
-### Local
+### Interfacing with a local installation
 
 The `AquaCropInterface` class can be used for interfacing with a local AquaCrop installation. It will generate the required files for a run, execute the plug-in program, and parse the output to Java objects. Once a run is complete, the interface will clean up any generated files. An interface can be instantiated and used to run a project like so:
 
@@ -104,7 +104,7 @@ catch (AquaCropException e) {
 }
 ```
 
-### Remote
+### Interfacing with a remote server
 
 The `AquaCropClient` class is used to connect to a remote AquaCrop interface:
 
