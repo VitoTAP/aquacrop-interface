@@ -1,4 +1,4 @@
-A Java interface for [AquaCrop](http://www.fao.org/nr/water/aquacrop.html), a crop-model developed by [FAO](http://www.fao.org) to simulate yield response to water. This enables local or remote programmatic execution of AquaCrop runs, without having to deal with the vast number of input/output plain text files.
+A Java interface for [AquaCrop](http://www.fao.org/nr/water/aquacrop.html), a crop-model developed by [FAO](http://www.fao.org) to simulate yield response to water. This enables local or remote programmatic/automated execution of AquaCrop runs, without having to deal with the vast number of input/output plain text files.
 
 ## Getting started
 
