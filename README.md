@@ -139,10 +139,10 @@ $ java -jar aquacrop-interface-0.5.5-with-dependencies.jar -port=44445 -path="C:
 Parameters can be set by passing command line arguments:
 
 - *keep* keep generated files after run.
-- *override=&lt;override&gt;* the path where the executable should look for the files.
-- *path=&lt;path&gt;* the path to where AquaCrop and ACsaV31plus directories can be found.
-- *port=&lt;port&gt;* the port for the server to listen on.
-- *prefix=&lt;prefix&gt;* the prefix command for running the executable.
+- *override &lt;override&gt;* the path where the executable should look for the files.
+- *path &lt;path&gt;* the path to where AquaCrop and ACsaV31plus directories can be found.
+- *port &lt;port&gt;* the port for the server to listen on.
+- *prefix &lt;prefix&gt;* the prefix command for running the executable.
 
 ## Linux
 
