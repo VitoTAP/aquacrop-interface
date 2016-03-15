@@ -34,17 +34,17 @@ public class AquaCropDeserializer {
 				double co2 = Double.parseDouble(tokens[7]);
 				double irri = Double.parseDouble(tokens[8]);
 				double infilt = Double.parseDouble(tokens[9]);
-				double e = Double.parseDouble(tokens[10]);
-				double eEx = Double.parseDouble(tokens[11]);
-				double tr = Double.parseDouble(tokens[12]);
-				double trTrx = Double.parseDouble(tokens[13]);
-				double drain = Double.parseDouble(tokens[14]);
-				double bioMass = Double.parseDouble(tokens[15]);
+				double e = Double.parseDouble(tokens[13]);
+				double eEx = Double.parseDouble(tokens[14]);
+				double tr = Double.parseDouble(tokens[15]);
+				double trTrx = Double.parseDouble(tokens[16]);
+				double drain = Double.parseDouble(tokens[11]);
+				double bioMass = Double.parseDouble(tokens[27]);
 				double brW = Double.parseDouble(tokens[16]);
 				double brWsf = Double.parseDouble(tokens[17]);
-				double wPetB = Double.parseDouble(tokens[18]);
-				double hi = Double.parseDouble(tokens[19]);
-				double yield = Double.parseDouble(tokens[20]);
+				double wPetB = Double.parseDouble(tokens[31]);
+				double hi = Double.parseDouble(tokens[29]);
+				double yield = Double.parseDouble(tokens[30]);
 				double wPetY = Double.parseDouble(tokens[21]);
 
 				// and return

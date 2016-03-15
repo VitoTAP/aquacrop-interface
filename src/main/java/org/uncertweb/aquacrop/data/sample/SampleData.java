@@ -119,7 +119,7 @@ public class SampleData {
 	}
 
 	public static EvapotranspirationMeasurements getEvapotranspirationMeasurements() {
-		EvapotranspirationMeasurements etMeasurements = new EvapotranspirationMeasurements(Frequency.Monthly, new LocalDate(2010, 10, 1));
+		EvapotranspirationMeasurements etMeasurements = new EvapotranspirationMeasurements(Frequency.Monthly, new LocalDate(2015, 6, 1));
 		etMeasurements.addMeasurement(1.7096196723394828);
 		etMeasurements.addMeasurement(2.638994122787746);
 		etMeasurements.addMeasurement(2.023086316173484);
@@ -136,7 +136,7 @@ public class SampleData {
 	}
 
 	public static RainfallMeasurements getRainfallMeasurements() {
-		RainfallMeasurements measurements = new RainfallMeasurements(Frequency.Monthly, new LocalDate(2010, 10, 1));
+		RainfallMeasurements measurements = new RainfallMeasurements(Frequency.Monthly, new LocalDate(2015, 6, 1));
 		measurements.addMeasurement(95.2082);
 		measurements.addMeasurement(96.2005);
 		measurements.addMeasurement(37.5696);

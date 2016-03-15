@@ -4,8 +4,8 @@ $soilCharacteristics.getCurveNumber()
 $soilCharacteristics.getEvaporableWater()
 $soilCharacteristics.getSoilHorizons().size()
 $soilCharacteristics.getRestrictiveSoilLayerDepth()
-Thickness	Sat	FC	WP	Ksat	description
+  Thickness  Sat   FC    WP     Ksat       CRa       CRb           description
 ---(m)-	----(vol %)-----	(mm/day)	---------------------------------
 #foreach( $horizon in $soilCharacteristics.getSoilHorizons() )
-$horizon.getThickness()	$horizon.getSat()	$horizon.getFc()	$horizon.getPwp()	$horizon.getkSat()	$horizon.getDescription()
+$horizon.getThickness()	$horizon.getSat()	$horizon.getFc()	$horizon.getPwp()	$horizon.getkSat()	$horizon.getCra()   $horizon.getCrb()   $horizon.getDescription()
 #end

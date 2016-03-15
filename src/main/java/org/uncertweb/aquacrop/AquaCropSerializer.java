@@ -3,6 +3,7 @@ package org.uncertweb.aquacrop;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Properties;
 
 import org.apache.velocity.Template;
@@ -58,7 +59,11 @@ public class AquaCropSerializer {
 		FileWriter writer = new FileWriter(new File(outputDir, outputFilename + ".PRO"));
 		
 		// write other files first
-		serialize(project.getCropCharacteristics());
+		if (project.getCropCharacteristicsFile() != null) {
+			Files.copy(project.getCropCharacteristicsFile(), new File(outputDir, outputFilename + ".CRO").toPath());
+		} else {
+			serialize(project.getCropCharacteristics());
+		}
 		serialize(project.getSoilCharacteristics());
 		serialize(project.getClimateCharacteristics());
 		

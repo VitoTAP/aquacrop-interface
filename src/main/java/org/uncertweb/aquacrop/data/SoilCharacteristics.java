@@ -8,7 +8,7 @@ public class SoilCharacteristics implements Serializable {
 	
 	private static final long serialVersionUID = 4098454278343937985L;
 	
-	private int curveNumber = 75;
+	private int curveNumber = 72;
 	private int evaporableWater; // Readily	evaporable	water	from	top	layer	(mm)	
 	private Collection<SoilHorizon> horizons;
 	private int restrictiveSoilLayerDepth = -9; // Depth (m) of restrictive soil layer inhibiting root zone expansion - None
@@ -55,7 +55,7 @@ public class SoilCharacteristics implements Serializable {
 		return restrictiveSoilLayerDepth;
 	}
 	
-	public class SoilHorizon implements Serializable {
+	public static class SoilHorizon implements Serializable {
 		
 		private static final long serialVersionUID = -3578882836751152658L;
 		
@@ -65,6 +65,8 @@ public class SoilCharacteristics implements Serializable {
 		private double fc;
 		private double sat;
 		private double kSat;
+		private double cra;
+		private double crb;
 		
 		public SoilHorizon(String description, double thickness, double pwp, double fc, double sat, double kSat) {
 			super();
@@ -104,7 +106,22 @@ public class SoilCharacteristics implements Serializable {
 		public double getkSat() {
 			return kSat;
 		}
-		
+
+		public double getCra() {
+			return cra;
+		}
+
+		public void setCra(double cra) {
+			this.cra = cra;
+		}
+
+		public double getCrb() {
+			return crb;
+		}
+
+		public void setCrb(double crb) {
+			this.crb = crb;
+		}
 	}
 	
 }

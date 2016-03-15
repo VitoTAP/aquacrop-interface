@@ -15,9 +15,13 @@ $project.getSoilAdjustmentFactor()
 $project.getDeficientAerationDays()
 $project.getSenescenceFactorExponent()
 $project.getSenescenceDecrease()
+1
 $project.getSoilProfileDepth()
 $project.getConsideredSoilProfileDepth()
 $antecedentAdjust
+20
+100
+16
 $project.getDefaultMinTemperature()
 $project.getDefaultMaxTemperature()
 $project.getDefaultGrowingMethod()
@@ -48,9 +52,12 @@ $basePath\
 -- 5. Soil (SOL) file
 ${filename}.SOL
 $basePath\
--- 6. Initial conditions (SW0) file
+-- 6. Groundwater (GWT) file
 (None)
 (None)
--- 7. Off-season conditions (OFF) file
+-- 7. Initial conditions (SW0) file
+(None)
+(None)
+-- 8. Off-season conditions (OFF) file
 (None)
 (None)
