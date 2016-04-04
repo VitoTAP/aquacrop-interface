@@ -48,6 +48,7 @@ public class Project implements Serializable {
 	private SoilCharacteristics soilCharacteristics;
 
 	private Path cropCharacteristicsFile = null;
+	private Path soilCharacteristicsFile = null;
 
 	public Project(ClimateCharacteristics climateCharacteristics, CropCharacteristics cropCharacteristics, SoilCharacteristics soilCharacteristics) {
 		this.climateCharacteristics = climateCharacteristics;
@@ -73,6 +74,14 @@ public class Project implements Serializable {
 
 	public Path getCropCharacteristicsFile() {
 		return cropCharacteristicsFile;
+	}
+
+	public void setSoilCharacteristicsFile(Path soilCharacteristicsFile) {
+		this.soilCharacteristicsFile = soilCharacteristicsFile;
+	}
+
+	public Path getSoilCharacteristicsFile() {
+		return soilCharacteristicsFile;
 	}
 
 	/**
@@ -234,6 +243,6 @@ public class Project implements Serializable {
 
 	public void setConsideredSoilProfileDepth(double consideredSoilProfileDepth) {
 		this.consideredSoilProfileDepth = consideredSoilProfileDepth;
-	}	
+	}
 
 }

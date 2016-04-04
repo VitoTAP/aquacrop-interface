@@ -64,7 +64,12 @@ public class AquaCropSerializer {
 		} else {
 			serialize(project.getCropCharacteristics());
 		}
-		serialize(project.getSoilCharacteristics());
+		if (project.getSoilCharacteristicsFile() != null) {
+			Files.copy(project.getSoilCharacteristicsFile(), new File(outputDir, outputFilename + ".SOL").toPath());
+		} else {
+			serialize(project.getSoilCharacteristics());
+		}
+
 		serialize(project.getClimateCharacteristics());
 		
 		// write
