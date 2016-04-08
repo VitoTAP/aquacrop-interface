@@ -1,25 +1,19 @@
 package org.uncertweb.aquacrop;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Properties;
-
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
-import org.uncertweb.aquacrop.data.ClimateCharacteristics;
-import org.uncertweb.aquacrop.data.Co2Measurements;
-import org.uncertweb.aquacrop.data.CropCharacteristics;
-import org.uncertweb.aquacrop.data.EvapotranspirationMeasurements;
-import org.uncertweb.aquacrop.data.Project;
-import org.uncertweb.aquacrop.data.RainfallMeasurements;
-import org.uncertweb.aquacrop.data.SoilCharacteristics;
-import org.uncertweb.aquacrop.data.TemperatureMeasurements;
+import org.apache.velocity.tools.generic.NumberTool;
+import org.uncertweb.aquacrop.data.*;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Properties;
 
 public class AquaCropSerializer {
 	
@@ -73,7 +67,7 @@ public class AquaCropSerializer {
 		serialize(project.getClimateCharacteristics());
 		
 		// write
-		VelocityContext context = new VelocityContext();
+		VelocityContext context = createContext();
 		context.put("aquaCropVersion", AquaCrop.VERSION);
 		context.put("basePath", (outputPathOverride != null ? outputPathOverride : new File(outputDir, "AquaCrop\\DATA").getAbsolutePath()));
 		context.put("filename", outputFilename);
@@ -95,7 +89,7 @@ public class AquaCropSerializer {
 		FileWriter writer = new FileWriter(new File(outputDir, outputFilename + ".PLU"));
 		
 		// write
-		VelocityContext context = new VelocityContext();
+		VelocityContext context = createContext();
 		context.put("rainfallMeasurements", rainfallMeasurements);
 		Template template = getTemplate("rainfallMeasurements");
 		template.merge(context, writer);
@@ -104,12 +98,19 @@ public class AquaCropSerializer {
 		writer.close();	
 	}
 
+	private VelocityContext createContext() {
+		VelocityContext context = new VelocityContext();
+		NumberTool numberTool = new NumberTool();
+		context.put("number", numberTool);
+		return context;
+	}
+
 	public void serialize(ClimateCharacteristics cliCharacteristics) throws IOException {
 		// create file
 		FileWriter writer = new FileWriter(new File(outputDir, outputFilename + ".CLI"));
 		
 		// write
-		VelocityContext context = new VelocityContext();
+		VelocityContext context = createContext();
 		context.put("aquaCropVersion", AquaCrop.VERSION);
 		context.put("filename", outputFilename);
 		Template template = getTemplate("climateCharacteristics");
@@ -130,7 +131,7 @@ public class AquaCropSerializer {
 		FileWriter writer = new FileWriter(new File(outputDir, outputFilename + ".TMP"));
 		
 		// write
-		VelocityContext context = new VelocityContext();
+		VelocityContext context = createContext();
 		context.put("temperatureMeasurements", tmpMeasurements);
 		Template template = getTemplate("temperatureMeasurements");
 		template.merge(context, writer);
@@ -144,7 +145,7 @@ public class AquaCropSerializer {
 		FileWriter writer = new FileWriter(new File(outputDir, outputFilename + ".SOL"));
 		
 		// write
-		VelocityContext context = new VelocityContext();
+		VelocityContext context = createContext();
 		context.put("aquaCropVersion", AquaCrop.VERSION);
 		context.put("soilCharacteristics", soilCharacteristics);
 		Template template = getTemplate("soilCharacteristics");
@@ -159,7 +160,7 @@ public class AquaCropSerializer {
 		FileWriter writer = new FileWriter(new File(outputDir, outputFilename + ".CO2"));
 		
 		// write
-		VelocityContext context = new VelocityContext();
+		VelocityContext context = createContext();
 		context.put("co2Measurements", co2Measurements);
 		Template template = getTemplate("co2Measurements");
 		template.merge(context, writer);
@@ -173,7 +174,7 @@ public class AquaCropSerializer {
 		FileWriter writer = new FileWriter(new File(outputDir, outputFilename + ".CRO"));
 		
 		// write
-		VelocityContext context = new VelocityContext();
+		VelocityContext context = createContext();
 		context.put("aquaCropVersion", AquaCrop.VERSION);
 		context.put("cropCharacteristics", cropCharacteristics);
 		context.put("sown", (cropCharacteristics.isSown() ? 1 : 0));
@@ -190,7 +191,7 @@ public class AquaCropSerializer {
 		FileWriter writer = new FileWriter(new File(outputDir, outputFilename + ".ETO"));
 		
 		// write
-		VelocityContext context = new VelocityContext();
+		VelocityContext context = createContext();
 		context.put("etMeasurements", etMeasurements);
 		Template template = getTemplate("evapotranspirationMeasurements");
 		template.merge(context, writer);

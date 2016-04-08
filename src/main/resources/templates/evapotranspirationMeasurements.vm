@@ -8,5 +8,5 @@ $etMeasurements.getFirstDay().getYear()
 Average ETo (mm/day)
 =======================
 #foreach( $measurement in $etMeasurements.getMeasurements() )
-$measurement
+$number.format("#0.00000",$measurement)
 #end

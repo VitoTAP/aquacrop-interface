@@ -8,5 +8,5 @@ $rainfallMeasurements.getFirstDay().getYear()
 Total Rain (mm)
 =======================
 #foreach( $measurement in $rainfallMeasurements.getMeasurements() )
-$measurement
+$number.format("#0.00000",$measurement)
 #end
