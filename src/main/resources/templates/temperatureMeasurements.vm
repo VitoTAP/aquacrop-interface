@@ -8,5 +8,5 @@ $temperatureMeasurements.getFirstDay().getYear()
 Tmin (C)	TMax (C)
 =======================
 #foreach( $measurement in $temperatureMeasurements.getMeasurements() )
-$number.format("#0.00",$measurement.getMinimum())	$number.format("#0.00",$measurement.getMaximum())
+$number.format("#0.0",$measurement.getMinimum())	$number.format("#0.0",$measurement.getMaximum())
 #end

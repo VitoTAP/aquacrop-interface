@@ -10,13 +10,15 @@ public class Output implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
+	private int year;
 	private double rain; // mm
 	private double eto; // mm
 	private double gdd; // degC/day
 	private double co2; // ppm
 	private double irri; // mm
 	private double infilt; // mm
+	private double runOff;
 	private double e; // mm
 	private double  eEx; // %
 	private double tr; // mm
@@ -29,15 +31,19 @@ public class Output implements Serializable {
 	private double  hi; // %
 	private double yield; // ton/ha
 	private double wPetY; // kg/m3
-	
-	public Output(double rain, double eto, double gdd, double co2, double irri, double infilt, double e, double  eEx, double tr,
-		double trTrx, double drain, double bioMass, double  brW, double  brWsf, double wPetB, double  hi, double yield, double wPetY) {
+	private double cycleDays;
+	private double tempStr;
+
+	public Output(int year,double rain, double eto, double gdd, double co2, double irri, double infilt, double runOff, double e, double eEx, double tr,
+				  double trTrx, double drain, double bioMass, double brW, double brWsf, double wPetB, double hi, double yield, double wPetY,  double cycleDays, double tempStr) {
+		this.year = year;
 		this.rain = rain;
 		this.eto = eto;
 		this.gdd = gdd;
 		this.co2 = co2;
 		this.irri = irri;
 		this.infilt = infilt;
+		this.runOff = runOff;
 		this.e = e;
 		this.eEx = eEx;
 		this.tr = tr;
@@ -50,6 +56,8 @@ public class Output implements Serializable {
 		this.hi = hi;
 		this.yield = yield;
 		this.wPetY = wPetY;
+		this.cycleDays = cycleDays;
+		this.tempStr = tempStr;
 	}
 
 	public double getRain() {
@@ -123,7 +131,23 @@ public class Output implements Serializable {
 	public double getwPetY() {
 		return wPetY;
 	}
-	
+
+	public int getYear() {
+		return year;
+	}
+
+	public double getRunOff() {
+		return runOff;
+	}
+
+	public double getCycleDays() {
+		return cycleDays;
+	}
+
+	public double getTempStr() {
+		return tempStr;
+	}
+
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		for (Field field : this.getClass().getDeclaredFields()) {
