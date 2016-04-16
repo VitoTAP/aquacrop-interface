@@ -44,7 +44,7 @@ public class AquaCropDeserializer {
 				double tr = Double.parseDouble(tokens[15]);
 				double trTrx = Double.parseDouble(tokens[16]);
 
-				double brW = Double.parseDouble(tokens[16]);
+				//double brW = Double.parseDouble(tokens[16]);
 				double brWsf = Double.parseDouble(tokens[17]);
 				double cycleDays  = Double.parseDouble(tokens[21]);
 				double tempStr = Double.parseDouble(tokens[24]);
@@ -56,7 +56,7 @@ public class AquaCropDeserializer {
 
 
 				// and return
-				return new Output(year, rain, eto, gdd, co2, irri, infilt,runOff, e, eEx, tr, trTrx, drain, bioMass, brW, brWsf, wPetB, hi, yield, 0.,cycleDays,tempStr);
+				return new Output(year, rain, eto, gdd, co2, irri, infilt,runOff, e, eEx, tr, trTrx, drain, bioMass, 0., brWsf, wPetB, hi, yield, 0.,cycleDays,tempStr);
 			}
 		}
 

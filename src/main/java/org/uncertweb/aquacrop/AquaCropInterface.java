@@ -1,14 +1,14 @@
 package org.uncertweb.aquacrop;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.uncertweb.aquacrop.data.Output;
 import org.uncertweb.aquacrop.data.Project;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * Okay...
@@ -157,7 +157,7 @@ public class AquaCropInterface {
 			// clean up input files
 			try {
 				if (keepFiles) {
-					/*moveFileFrom(runPath, "projectPROseason.OUT", "ACsaV31plus/OUTP/");
+					moveFileFrom(runPath, "projectPROseason.OUT", "ACsaV31plus/OUTP/");
 					moveFileFrom(runPath, "defaultPROseason.OUT", "ACsaV31plus/OUTP/");
 					moveFileFrom(runPath, "ListProjectsLoaded.OUT", "ACsaV31plus/OUTP/");
 					moveFileFrom(runPath, "project.PRO", "ACsaV31plus/LIST/");
@@ -167,12 +167,12 @@ public class AquaCropInterface {
 					moveFileFrom(runPath, "project.TMP", "AquaCrop/DATA/");
 					moveFileFrom(runPath, "project.SOL", "AquaCrop/DATA/");
 					moveFileFrom(runPath, "project.CO2", "AquaCrop/DATA/");
-					moveFileFrom(runPath, "project.ETO", "AquaCrop/DATA/");*/
-					//FileUtils.deleteDirectory(new File(runDir, "AquaCrop"));
-					//FileUtils.deleteDirectory(new File(runDir, "ACsaV31plus"));
-					/*if (output == null) {
+					moveFileFrom(runPath, "project.ETO", "AquaCrop/DATA/");
+					FileUtils.deleteDirectory(new File(runDir, "AquaCrop"));
+					FileUtils.deleteDirectory(new File(runDir, "ACsaV31plus"));
+					if (output == null) {
 						runDir.renameTo(new File(basePath, "aquacrop_" + runId + "_failed"));
-					}*/
+					}
 				}
 				else {
 					FileUtils.deleteDirectory(runDir);
