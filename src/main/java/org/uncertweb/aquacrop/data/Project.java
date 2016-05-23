@@ -1,9 +1,9 @@
 package org.uncertweb.aquacrop.data;
 
+import org.joda.time.LocalDate;
+
 import java.io.Serializable;
 import java.nio.file.Path;
-
-import org.joda.time.LocalDate;
 
 /**
  * 
@@ -49,6 +49,7 @@ public class Project implements Serializable {
 
 	private Path cropCharacteristicsFile = null;
 	private Path soilCharacteristicsFile = null;
+	private Path irrigationFile;
 
 	public Project(ClimateCharacteristics climateCharacteristics, CropCharacteristics cropCharacteristics, SoilCharacteristics soilCharacteristics) {
 		this.climateCharacteristics = climateCharacteristics;
@@ -245,4 +246,11 @@ public class Project implements Serializable {
 		this.consideredSoilProfileDepth = consideredSoilProfileDepth;
 	}
 
+	public Path getIrrigationFile() {
+		return irrigationFile;
+	}
+
+	public void setIrrigationFile(Path irrigationFile) {
+		this.irrigationFile = irrigationFile;
+	}
 }

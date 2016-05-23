@@ -44,8 +44,8 @@ $basePath\
 ${filename}.CRO
 $basePath\
 -- 3. Irrigation (IRR) file
-(None)
-(None)
+${irrigationFile}
+$basePath\
 -- 4. Management (MAN) file
 (None)
 (None)

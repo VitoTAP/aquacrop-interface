@@ -77,6 +77,15 @@ public class AquaCropSerializer {
 		context.put("cropPeriodStart", AquaCropUtilities.convertDateToInt(project.getCroppingPeriodStart())); 
 		context.put("cropPeriodEnd", AquaCropUtilities.convertDateToInt(project.getCroppingPeriodEnd()));
 		context.put("antecedentAdjust", (project.isAntecedentAdjust() ? "1" : "0"));
+
+		if (project.getIrrigationFile() != null) {
+			String irrigationFileName = outputFilename + ".IRR";
+			Files.copy(project.getIrrigationFile(), new File(outputDir, irrigationFileName).toPath());
+			context.put("irrigationFile", irrigationFileName);
+		}else{
+			context.put("irrigationFile","(None)");
+		}
+
 		Template template = getTemplate("project");
 		template.merge(context, writer);
 		

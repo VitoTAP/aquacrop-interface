@@ -92,7 +92,8 @@ public class AquaCropInterface {
 			moveFileTo(runPath, "project.TMP", "AquaCrop/DATA/");
 			moveFileTo(runPath, "project.SOL", "AquaCrop/DATA/");
 			moveFileTo(runPath, "project.CO2", "AquaCrop/DATA/");
-			moveFileTo(runPath, "project.ETO", "AquaCrop/DATA/");  
+			moveFileTo(runPath, "project.ETO", "AquaCrop/DATA/");
+			moveFileTo(runPath, "project.IRR", "AquaCrop/DATA/");
 			
 			// get runtime
 			logger.debug("Getting runtime...");
