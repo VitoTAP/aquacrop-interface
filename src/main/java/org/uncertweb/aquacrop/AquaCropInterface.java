@@ -53,91 +53,52 @@ public class AquaCropInterface {
 		this.keepFiles = keepFiles;
 	}
 
+	public File runWithoutParsing(Project project)throws AquaCropException {
+		// check given params are sensible
+		preRunChecks();
+		// generate an id
+		final String runId = String.valueOf(System.currentTimeMillis());
+
+		// generate run folder
+		File runDir = new File(basePath, "aquacrop_" + runId);
+
+		setupExecutable(runDir);
+
+		// serialize project and run
+
+		try {
+			File outputFile = runProject(project, runDir);
+		}catch (IOException e) {
+			// will be from creating the project file, or reading the output file
+			String message = "Error reading input/output files: " + e.getMessage();
+			throw new AquaCropException(message, e);
+		}
+		return runDir;
+	}
+
 	public Output run(Project project) throws AquaCropException {
 		// check given params are sensible
 		preRunChecks();
-		
 		// generate an id
 		final String runId = String.valueOf(System.currentTimeMillis());
-		
+
 		// generate run folder
 		File runDir = new File(basePath, "aquacrop_" + runId);
-		String runPath = runDir.getAbsolutePath();
-		try {
-			FileUtils.copyDirectoryToDirectory(new File(basePath, "ACsaV31plus"), runDir);
-			FileUtils.copyDirectoryToDirectory(new File(basePath, "AquaCrop"), runDir);
-		}
-		catch (IOException e) {
-			throw new AquaCropException("Couldn't create run directory.", e);
-		}
+
+		setupExecutable(runDir);
 
 		// serialize project and run
 		Output output = null;
-		try {			
-			// this will create all data files
-			if (basePathOverride != null) {
-				basePathOverride = basePathOverride + "\\" + runDir.getName() + "\\AquaCrop\\DATA";
-			}
-			logger.debug("Serializing project...");
-			AquaCropSerializer serializer = new AquaCropSerializer("project", runPath, basePathOverride);
-			serializer.serialize(project);
+		try {
+			File outputFile = runProject(project, runDir);
 
-			// move files
-			// PRO to ACsaV31plus/LIST/
-			// everything else to AquaCrop/DATA/
-			moveFileTo(runPath, "project.PRO", "ACsaV31plus/LIST/");
-			moveFileTo(runPath, "project.CLI", "AquaCrop/DATA/");
-			moveFileTo(runPath, "project.CRO", "AquaCrop/DATA/");
-			moveFileTo(runPath, "project.PLU", "AquaCrop/DATA/");
-			moveFileTo(runPath, "project.TMP", "AquaCrop/DATA/");
-			moveFileTo(runPath, "project.SOL", "AquaCrop/DATA/");
-			moveFileTo(runPath, "project.CO2", "AquaCrop/DATA/");
-			moveFileTo(runPath, "project.ETO", "AquaCrop/DATA/");
-			moveFileTo(runPath, "project.IRR", "AquaCrop/DATA/");
-			
-			// get runtime
-			logger.debug("Getting runtime...");
-			Runtime runtime = Runtime.getRuntime();
-			
-			// for monitoring and reading
-			File outputFile = new File(runPath, "ACsaV31plus/OUTP/projectPROseason.OUT");
-
-			// run program
-			try {			
-				// start aquacrop process
-				logger.debug("Starting process...");
-				Process process = runtime.exec((prefixCommand != null ? prefixCommand + " " : "") + runPath + "/ACsaV31plus/ACsaV31plus.exe");
-				
-	            // wait for process
-	            // we could be waiting forever if no output is produced
-	            logger.debug("Waiting for process to end...");
-				boolean done = false;
-				while (!done) {
-					if (outputFile.exists()) {
-						done = true;
-	            		Thread.sleep(2000); // wait for write
-	            		// potential for exit command here
-	            		// xwd -display :1 -root -out image.xwd
-						process.destroy(); // force required if error
-					}
-					else {
-	            		Thread.sleep(500);
-					}
-				}
-				process.waitFor();
-			}
-			catch (IOException e) {
-				throw new AquaCropException("Couldn't run AquaCrop: " + e.getMessage(), e);
-			}
-			catch (InterruptedException e) {
-				throw new AquaCropException("Couldn't run AquaCrop: " + e.getMessage(), e);
-			}
 
 			// parse output
 			logger.debug("Process finished, parsing output...");
 			FileReader reader = new FileReader(outputFile);
 			output = new AquaCropDeserializer().deserialize(reader);
 			reader.close();
+
 			
 			if (output == null) {
 				// must be a problem running AquaCrop, but unfortunately it only gives error messages in dialogs!
@@ -145,6 +106,7 @@ public class AquaCropInterface {
 				throw new AquaCropException(message);
 			}
 			else {
+
 				logger.debug("Parsed output successfully.");
 				return output;
 			}
@@ -183,6 +145,79 @@ public class AquaCropInterface {
 				logger.warn("Couldn't remove output directory.", e);
 			}
 		}
+	}
+
+	private void setupExecutable(File runDir) throws AquaCropException {
+		try {
+			FileUtils.copyDirectoryToDirectory(new File(basePath, "ACsaV31plus"), runDir);
+			FileUtils.copyDirectoryToDirectory(new File(basePath, "AquaCrop"), runDir);
+		}
+		catch (IOException e) {
+			throw new AquaCropException("Couldn't create run directory.", e);
+		}
+	}
+
+	private File runProject(Project project, File runDir) throws IOException, AquaCropException {
+		String runPath = runDir.getAbsolutePath();
+		// this will create all data files
+		if (basePathOverride != null) {
+            basePathOverride = basePathOverride + "\\" + runDir.getName() + "\\AquaCrop\\DATA";
+        }
+		logger.debug("Serializing project...");
+		AquaCropSerializer serializer = new AquaCropSerializer("project", runPath, basePathOverride);
+		serializer.serialize(project);
+
+		// move files
+		// PRO to ACsaV31plus/LIST/
+		// everything else to AquaCrop/DATA/
+		moveFileTo(runPath, "project.PRO", "ACsaV31plus/LIST/");
+		moveFileTo(runPath, "project.CLI", "AquaCrop/DATA/");
+		moveFileTo(runPath, "project.CRO", "AquaCrop/DATA/");
+		moveFileTo(runPath, "project.PLU", "AquaCrop/DATA/");
+		moveFileTo(runPath, "project.TMP", "AquaCrop/DATA/");
+		moveFileTo(runPath, "project.SOL", "AquaCrop/DATA/");
+		moveFileTo(runPath, "project.CO2", "AquaCrop/DATA/");
+		moveFileTo(runPath, "project.ETO", "AquaCrop/DATA/");
+		moveFileTo(runPath, "project.IRR", "AquaCrop/DATA/");
+
+		// get runtime
+		logger.debug("Getting runtime...");
+		Runtime runtime = Runtime.getRuntime();
+
+		// for monitoring and reading
+		File outputFile = new File(runPath, "ACsaV31plus/OUTP/projectPROseason.OUT");
+
+		// run program
+		try {
+            // start aquacrop process
+            logger.debug("Starting process...");
+            Process process = runtime.exec((prefixCommand != null ? prefixCommand + " " : "") + runPath + "/ACsaV31plus/ACsaV31plus.exe");
+
+            // wait for process
+            // we could be waiting forever if no output is produced
+            logger.debug("Waiting for process to end...");
+            boolean done = false;
+            while (!done) {
+                if (outputFile.exists()) {
+                    done = true;
+                    Thread.sleep(2000); // wait for write
+                    // potential for exit command here
+                    // xwd -display :1 -root -out image.xwd
+                    process.destroy(); // force required if error
+                }
+                else {
+                    Thread.sleep(500);
+                }
+            }
+            process.waitFor();
+        }
+        catch (IOException e) {
+            throw new AquaCropException("Couldn't run AquaCrop: " + e.getMessage(), e);
+        }
+        catch (InterruptedException e) {
+            throw new AquaCropException("Couldn't run AquaCrop: " + e.getMessage(), e);
+        }
+		return outputFile;
 	}
 
 	private void preRunChecks() throws AquaCropException {
