@@ -3,12 +3,14 @@ package org.uncertweb.aquacrop;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.uncertweb.aquacrop.data.DailyOutput;
 import org.uncertweb.aquacrop.data.Output;
 import org.uncertweb.aquacrop.data.Project;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Okay...
@@ -96,10 +98,16 @@ public class AquaCropInterface {
 			// parse output
 			logger.debug("Process finished, parsing output...");
 			FileReader reader = new FileReader(outputFile);
-			output = new AquaCropDeserializer().deserialize(reader);
+			AquaCropDeserializer aquaCropDeserializer = new AquaCropDeserializer();
+			output = aquaCropDeserializer.deserialize(reader);
 			reader.close();
 
-			
+			File dailyFile = new File(outputFile.getParentFile(),"projectPROday.OUT");
+			try (FileReader dailyReader = new FileReader(dailyFile)){
+				List<DailyOutput> dailyOutput = aquaCropDeserializer.deserializeDailyResult(dailyReader);
+				output.setDailyOutputs(dailyOutput);
+			}
+
 			if (output == null) {
 				// must be a problem running AquaCrop, but unfortunately it only gives error messages in dialogs!
 				String message = "Couldn't parse empty AquaCrop output, parameters may be invalid.";

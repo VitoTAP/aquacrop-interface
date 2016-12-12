@@ -1,16 +1,58 @@
 package org.uncertweb.aquacrop;
 
+import org.uncertweb.aquacrop.data.DailyOutput;
 import org.uncertweb.aquacrop.data.Output;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class AquaCropDeserializer {
 
 	public AquaCropDeserializer() {
 
+	}
+
+	public List<DailyOutput> deserializeDailyResult(Reader reader) throws IOException {
+		BufferedReader bufReader = new BufferedReader(reader);
+		bufReader.readLine(); // skip first line containing aquacrop version, creation date
+		bufReader.readLine(); // skip following empty line
+		bufReader.readLine(); // skip column headings
+		bufReader.readLine(); // skip column headings units
+		return bufReader.lines().map(AquaCropDeserializer::parseLine).collect(Collectors.toList());
+	}
+
+	private static DailyOutput parseLine(String line) {
+		String[] tokens = line.trim().split("\\s+");
+		//Day Month  Year   DAP Stage   WC(1.20)   Rain     Irri   Surf   Infilt   RO    Drain       CR    Zgwt       Ex       E    E/Ex     Trx       Tr  Tr/Trx    ETx      ET   ET/ETx
+		return new DailyOutput(
+				Short.parseShort(tokens[0]),
+				Short.parseShort(tokens[1]),
+				Integer.parseInt(tokens[2]),
+				Integer.parseInt(tokens[3]),
+				Integer.parseInt(tokens[4]),
+				Double.parseDouble(tokens[5]),
+				Double.parseDouble(tokens[6]),
+				Double.parseDouble(tokens[7]),
+				Double.parseDouble(tokens[8]),
+				Double.parseDouble(tokens[9]),
+				Double.parseDouble(tokens[10]),
+				Double.parseDouble(tokens[11]),
+				Double.parseDouble(tokens[12]),
+				Double.parseDouble(tokens[13]),
+				Double.parseDouble(tokens[14]),
+				Double.parseDouble(tokens[15]),
+				Double.parseDouble(tokens[16]),
+				Double.parseDouble(tokens[17]),
+				Double.parseDouble(tokens[18]),
+				Double.parseDouble(tokens[19]),
+				Double.parseDouble(tokens[20]),
+				Double.parseDouble(tokens[21]),
+				Double.parseDouble(tokens[22])
+		);
 	}
 
 	public Output deserialize(Reader reader) throws FileNotFoundException, IOException {

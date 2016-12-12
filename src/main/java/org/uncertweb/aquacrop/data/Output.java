@@ -3,6 +3,7 @@ package org.uncertweb.aquacrop.data;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.List;
 
 public class Output implements Serializable {
 
@@ -33,6 +34,7 @@ public class Output implements Serializable {
 	private double wPetY; // kg/m3
 	private double cycleDays;
 	private double tempStr;
+	private List<DailyOutput> dailyOutputs;
 
 	public Output(int year,double rain, double eto, double gdd, double co2, double irri, double infilt, double runOff, double e, double eEx, double tr,
 				  double trTrx, double drain, double bioMass, double brW, double brWsf, double wPetB, double hi, double yield, double wPetY,  double cycleDays, double tempStr) {
@@ -146,6 +148,14 @@ public class Output implements Serializable {
 
 	public double getTempStr() {
 		return tempStr;
+	}
+
+	public List<DailyOutput> getDailyOutputs(){
+		return dailyOutputs;
+	}
+
+	public void setDailyOutputs(List<DailyOutput> dailyOutputs) {
+		this.dailyOutputs = dailyOutputs;
 	}
 
 	public String toString() {
